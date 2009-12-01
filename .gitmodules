@@ -1,3 +1,6 @@
 [submodule "lib/saucerest-ruby"]
 	path = lib/saucerest-ruby
 	url = git://github.com/saucelabs/saucerest-ruby.git
+[submodule "lib/saucerest-python"]
+	path = lib/saucerest-python
+	url = git://github.com/saucelabs/saucerest-python.git
