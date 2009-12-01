@@ -10,6 +10,21 @@ begin
     gem.email = "pair+kelly+sam@pivotallabs.com"
     gem.homepage = "http://github.com/pivotal/saucelabs-adapter"
     gem.authors = ["Kelly Felkins & Sam Pierson"]
+    gem.files = [
+     "LICENSE",
+     "README.rdoc",
+     "Rakefile",
+     "VERSION",
+     "lib/sauce_tunnel.rb",
+     "lib/saucelabs-adapter.rb",
+     "lib/selenium_config.rb",
+     "lib/saucerest-ruby/saucerest.rb",
+     "lib/saucerest-python/tunnel.py",
+     "lib/saucerest-python/daemon.py",
+     "lib/saucerest-python/saucerest.py",
+     "lib/saucerest-python/sshtunnel.py",
+     "lib/tasks/saucelabs-adapter.rake"
+  ]
     # gem.add_development_dependency "thoughtbot-shoulda", ">= 0"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
