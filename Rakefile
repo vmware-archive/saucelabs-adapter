@@ -23,7 +23,10 @@ begin
      "lib/saucerest-python/daemon.py",
      "lib/saucerest-python/saucerest.py",
      "lib/saucerest-python/sshtunnel.py",
-     "lib/tasks/saucelabs-adapter.rake"
+     "lib/tasks/saucelabs-adapter.rake",
+     "generators/saucelabs_adapter/saucelabs_adapter_generator.rb",
+     "generators/saucelabs_adapter/templates/selenium.yml",
+     "generators/saucelabs_adapter/templates/saucelabs_adapter.rake"
   ]
     # gem.add_development_dependency "thoughtbot-shoulda", ">= 0"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings

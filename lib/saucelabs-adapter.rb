@@ -9,6 +9,10 @@ module Polonium
       selenium_config.configure_polonium(configuration)
       @selenium_driver = configuration.driver
     end
+
+    def self.method_added(method_name)
+      raise "Argh. Don't override Polonium::NewTestCase#setup if you want rake selenium:sauce to work." if method_name == :setup
+    end
   end
 end
 
