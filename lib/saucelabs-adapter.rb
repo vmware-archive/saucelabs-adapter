@@ -14,9 +14,27 @@ module Polonium
       raise "Argh. Don't override Polonium::NewTestCase#setup if you want rake selenium:sauce to work." if method_name == :setup
     end
   end
+
+  class TrackerSeleniumTestCase < ActiveSupport::TestCase
+    def setup
+      # TODO refactor this stuff into ActiveSupport::TestCase?
+      # TODO We would need a way of knowing when they are trying to run a Selenium test case and when they are running a regular test case.
+      # TODO Perhaps just requiring 'saucelabs-adapter' means you are doing that?
+      raise "Cannot use transactional fixtures if ActiveRecord concurrency is turned on (which is required for Selenium tests to work)." if self.class.use_transactional_fixtures
+      selenium_config = SeleniumConfig.new(ENV['SELENIUM_ENV'])
+      selenium_config.configure_polonium(configuration)
+      @selenium_driver = configuration.driver
+    end
+
+    def self.method_added(method_name)
+      raise "Argh. Don't override Polonium::NewTestCase#setup if you want rake selenium:sauce to work." if method_name == :setup
+    end
+  end
 end
 
 class Test::Unit::UI::Console::TestRunner
+
+  private
 
   def attach_to_mediator_with_sauce_tunnel
     attach_to_mediator_without_sauce_tunnel

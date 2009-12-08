@@ -47,7 +47,7 @@ class SeleniumConfig
   private
 
   def read_configuration(configuration_name)
-    selenium_yml = Rails.root.join('config', 'selenium.yml')
+    selenium_yml = File.join(Rails.root, 'config', 'selenium.yml')
     selenium_configs = YAML.load_file(selenium_yml)
     configuration = selenium_configs[configuration_name]
     raise "Configuration #{configuration_name} not found in #{selenium_yml}" unless configuration
