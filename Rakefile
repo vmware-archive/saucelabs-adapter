@@ -28,6 +28,7 @@ begin
      "generators/saucelabs_adapter/templates/selenium.yml",
      "generators/saucelabs_adapter/templates/saucelabs_adapter.rake"
   ]
+    gem.add_dependency 'rest-client', '1.0.3'
     # gem.add_development_dependency "thoughtbot-shoulda", ">= 0"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
