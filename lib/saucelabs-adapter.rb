@@ -38,7 +38,8 @@ class Test::Unit::UI::Console::TestRunner
 
   def attach_to_mediator_with_sauce_tunnel
     attach_to_mediator_without_sauce_tunnel
-    @selenium_config = SeleniumConfig.new(ENV['SELENIUM_ENV'])
+    selenium_env = ENV['SELENIUM_ENV'] || "local"
+    @selenium_config = SeleniumConfig.new(selenium_env)
     if @selenium_config['selenium_server_address'] == 'saucelabs.com'
       @mediator.add_listener(Test::Unit::UI::TestRunnerMediator::STARTED, &method(:setup_tunnel))
       @mediator.add_listener(Test::Unit::UI::TestRunnerMediator::FINISHED, &method(:teardown_tunnel))
