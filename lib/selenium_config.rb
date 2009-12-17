@@ -1,10 +1,13 @@
 class SeleniumConfig
+  attr_reader :local_port
 
-  def initialize(config_name = nil)
+  def initialize(config_name = nil, selenium_yml = nil, local_port = 4000)
     if defined?(@@configuration_name) && @@configuration_name != config_name
       @@configuration == nil
     end
     @@configuration_name = config_name
+    @selenium_yml = selenium_yml || File.join(RAILS_ROOT, 'config', 'selenium.yml')
+    @local_port = local_port
   end
 
   def configuration
@@ -47,8 +50,7 @@ class SeleniumConfig
   private
 
   def read_configuration(configuration_name)
-    selenium_yml = File.join(Rails.root, 'config', 'selenium.yml')
-    selenium_configs = YAML.load_file(selenium_yml)
+    selenium_configs = YAML.load_file(@selenium_yml)
     configuration = selenium_configs[configuration_name]
     raise "Configuration #{configuration_name} not found in #{selenium_yml}" unless configuration
 
@@ -56,7 +58,8 @@ class SeleniumConfig
       # We are using Sauce Labs and therefore the Sauce Tunnel.
       # We need to use a masquerade hostname on the EC2 end of the tunnel that will be unique within the scope of
       # this account (e.g. pivotallabs).  Therefore we mint a fairly unique hostname here.
-      configuration['application_address'] = "#{Socket.gethostname}-#{Process.pid}.com"
+      hostname = Socket.gethostname.split(".").first
+      configuration['application_address'] = "#{hostname}-#{Process.pid}.com"
     end
     configuration
   end

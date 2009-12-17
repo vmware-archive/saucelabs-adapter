@@ -11,7 +11,7 @@ class SauceTunnel
 
   def start_tunnel
     boot_tunnel_machine
-    Timeout::timeout(2.minutes) do
+    Timeout::timeout(120) do
       while !tunnel_is_up?
         sleep 10
       end
@@ -43,7 +43,7 @@ class SauceTunnel
       raise "#{tunnel_script} is missing, have you installed saucerest-python?"
     end
     tunnel_command = "python #{tunnel_script} --shutdown #{@se_config[:username]} #{@se_config[:'access-key']} " +
-                     "localhost 4000:#{@se_config['application_port']} #{@se_config['application_address']} &"
+                     "localhost #{@se_config.local_port}:#{@se_config['application_port']} #{@se_config['application_address']} &"
     puts tunnel_command
     system(tunnel_command)
   end
@@ -59,7 +59,7 @@ class SauceTunnel
   end
 
   def shutdown_tunnel_machine
-    Timeout::timeout(2.minutes) do
+    Timeout::timeout(120) do
       @sauce_api_endpoint.delete :tunnel, @tunnel_id
       while tunnel_info
         sleep 10
