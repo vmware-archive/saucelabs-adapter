@@ -1,0 +1,6 @@
+#!/bin/sh
+rm pkg/*
+rake build
+sudo gem uninstall saucelabs-adapter
+sudo gem install pkg/*
+

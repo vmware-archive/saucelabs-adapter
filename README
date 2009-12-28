@@ -1,0 +1,26 @@
+To use:
+
+  gem install saucelabs-adapter --source gems.pivotallabs.com
+
+  cd your_project
+
+  script/generate saucelabs_adapter
+
+Install the python script dependencies with:
+
+    easy_install ...
+
+Then
+
+  rake selenium2:local
+
+  or
+
+  rake selenium2:sauce
+
+
+TODO
+
+  Refactor Polonium::NewTestCase and Polonium::TrackerSeleniumTestCase into ActiveSupport::TestCase
+
+  Reconcile rake namespaces 'selenium' (from Pivotal Core Bundle) and 'selenium2'
