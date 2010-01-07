@@ -1,4 +1,4 @@
-namespace :selenium2 do
+namespace :selenium do
   desc "Run the selenium remote-control server"
   task :server do
     system('selenium-rc')
@@ -34,9 +34,8 @@ namespace :selenium2 do
     if (File.exists?("test/selenium/selenium_suite.rb"))
       run "ruby test/selenium/selenium_suite.rb"
     else
-      Dir["test/selenium/**/*_test.rb"].each do |file|
-        require file
-      end
+      puts "test/selenium/selenium_suite.rb not found, bailing.\nPlease create a script that will run your selenium tests."
+      exit 1
     end
   end
 end
