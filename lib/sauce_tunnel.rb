@@ -11,7 +11,7 @@ class SauceTunnel
 
   def start_tunnel
     boot_tunnel_machine
-    Timeout::timeout(120) do
+    Timeout::timeout(240) do
       while !tunnel_is_up?
         sleep 10
       end

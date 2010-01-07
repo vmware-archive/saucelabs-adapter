@@ -70,3 +70,9 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
+
+desc "Push gem to gems.pivotallabs.com"
+task :deploy do
+  gem = `ls pkg/*|tail -1`.strip
+  `scp #{gem} gems.pivotallabs.com:gems`
+end
