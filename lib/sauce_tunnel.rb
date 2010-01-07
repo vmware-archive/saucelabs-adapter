@@ -17,34 +17,34 @@ class SauceTunnel
       end
       @tunnel_id = tunnel_info['_id']
     end
-    STDOUT.puts "Tunnel ID #{@tunnel_id} for #{@se_config['application_address']} is up."
+    STDOUT.puts "[saucelabs-adapter] Tunnel ID #{@tunnel_id} for #{@se_config['application_address']} is up."
   rescue Timeout::Error
       raise "Tunnel did not come up within 2 minutes"
   end
 
   def shutdown
-    STDOUT << "Shutting down tunnel to Saucelabs..."
+    STDOUT << "[saucelabs-adapter] Shutting down tunnel to Saucelabs..."
     shutdown_tunnel_machine
-    STDOUT.puts "done."
+    STDOUT.puts "[saucelabs-adapter] done."
   end
 
   private
 
   def connect_to_rest_api
     sauce_api_url = "https://#{@se_config['username']}:#{@se_config['access-key']}@saucelabs.com/rest/#{@se_config['username']}/"
-    puts "Connecting to Sauce API at #{sauce_api_url}"
+    # puts "[saucelabs-adapter] Connecting to Sauce API at #{sauce_api_url}"
     @sauce_api_endpoint = SauceREST::Client.new sauce_api_url
   end
 
   def boot_tunnel_machine
-    puts "Setting up tunnel to Saucelabs:"
+    puts "[saucelabs-adapter] Setting up tunnel to Saucelabs:"
     tunnel_script = File.join(File.dirname(__FILE__), 'saucerest-python/tunnel.py')
     if !File.exist?(tunnel_script)
       raise "#{tunnel_script} is missing, have you installed saucerest-python?"
     end
     tunnel_command = "python #{tunnel_script} --shutdown #{@se_config[:username]} #{@se_config[:'access-key']} " +
                      "localhost #{@se_config.local_port}:#{@se_config['application_port']} #{@se_config['application_address']} &"
-    puts tunnel_command
+    # puts tunnel_command
     system(tunnel_command)
   end
 

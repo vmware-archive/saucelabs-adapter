@@ -27,7 +27,6 @@ namespace :selenium2 do
   end
 
   task :check_selenium_env_is_set do
-    puts "RAILS_ROOT is #{RAILS_ROOT}"
     raise "SELENIUM_ENV must be set" unless ENV['SELENIUM_ENV']
   end
 

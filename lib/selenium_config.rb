@@ -52,7 +52,7 @@ class SeleniumConfig
   def read_configuration(configuration_name)
     selenium_configs = YAML.load_file(@selenium_yml)
     configuration = selenium_configs[configuration_name]
-    raise "Configuration #{configuration_name} not found in #{selenium_yml}" unless configuration
+    raise "Stanza '#{configuration_name}' not found" unless configuration
 
     if configuration['selenium_server_address'] == 'saucelabs.com'
       # We are using Sauce Labs and therefore the Sauce Tunnel.
@@ -62,5 +62,8 @@ class SeleniumConfig
       configuration['application_address'] = "#{hostname}-#{Process.pid}.com"
     end
     configuration
+  rescue Exception => e
+    puts "[saucelabs-adapter] Disabled. (Couldn't read config '#{configuration_name}' in #{@selenium_yml}: #{e.message})"
+    {}
   end
 end
