@@ -23,6 +23,10 @@ class SeleniumConfig
     end
   end
 
+  def []=(attribute, value)
+    configuration[attribute] = value
+  end
+
   # Takes a Webrat::Configuration and configures it
   def configure_webrat(webrat_configuration_object)
     configuration.each do |method, value|
