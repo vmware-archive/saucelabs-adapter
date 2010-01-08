@@ -71,8 +71,15 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
 
+def run(command)
+  puts command
+  puts `#{command}`
+end
+
 desc "Push gem to gems.pivotallabs.com"
-task :deploy do
+task :deploy => :build do
   gem = `ls pkg/*|tail -1`.strip
-  `scp #{gem} gems.pivotallabs.com:gems`
+  puts "Deploying #{gem}:"
+  run "scp #{gem} gems.pivotallabs.com:gems"
+  run "ssh gems.pivotallabs.com 'gem generate_index --directory=/var/www/nginx-default >> /home/pivotal/gem_generate_index.log 2>&1'"
 end
