@@ -16,19 +16,25 @@ begin
      "Rakefile",
      "VERSION",
      "lib/sauce_tunnel.rb",
+     "lib/saucelabs_adapter.rb",
      "lib/saucelabs-adapter.rb",
      "lib/selenium_config.rb",
+     "lib/jsunit_selenium_support.rb",
      "lib/saucerest-ruby/saucerest.rb",
      "lib/saucerest-python/tunnel.py",
      "lib/saucerest-python/daemon.py",
      "lib/saucerest-python/saucerest.py",
      "lib/saucerest-python/sshtunnel.py",
-     "lib/tasks/saucelabs-adapter.rake",
+     "lib/tasks/jsunit.rake",
      "generators/saucelabs_adapter/saucelabs_adapter_generator.rb",
      "generators/saucelabs_adapter/templates/selenium.yml",
-     "generators/saucelabs_adapter/templates/saucelabs_adapter.rake"
+     "generators/saucelabs_adapter/templates/saucelabs_adapter.rake",
+     "generators/saucelabs_adapter/templates/jsunit.rake",
+     "generators/saucelabs_adapter/templates/jsunit_suite_example.rb"
   ]
     gem.add_dependency 'rest-client', '>= 1.0.3'
+    gem.add_dependency 'selenium-client', '>= 1.2.17'
+    gem.add_dependency 'lsof', '>= 0.3.0'
     # gem.add_development_dependency "thoughtbot-shoulda", ">= 0"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end

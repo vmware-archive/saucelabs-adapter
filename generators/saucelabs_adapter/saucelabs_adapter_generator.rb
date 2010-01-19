@@ -22,7 +22,10 @@ HELPFUL_INSTRUCTIONS
     record do |m|
       m.directory 'lib/tasks'
       m.file      'saucelabs_adapter.rake',        'lib/tasks/saucelabs_adapter.rake'
+      m.file      'jsunit.rake',                   'lib/tasks/jsunit.rake'
       m.file      'selenium.yml',                  'config/selenium.yml'
+      m.directory 'test/jsunit'
+      m.file      'jsunit_suite_example.rb',       'test/jsunit/jsunit_suite_example.rb'
     end
   end
 

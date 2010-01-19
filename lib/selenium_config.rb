@@ -1,19 +1,15 @@
 class SeleniumConfig
-  attr_reader :local_port
+  attr_reader :configuration
+  attr_reader :localhost_app_server_port
 
-  def initialize(config_name = nil, selenium_yml = nil, local_port = 4000)
-    if defined?(@@configuration_name) && @@configuration_name != config_name
-      @@configuration == nil
-    end
-    @@configuration_name = config_name
-    @selenium_yml = selenium_yml || File.join(RAILS_ROOT, 'config', 'selenium.yml')
-    @local_port = local_port
+  def initialize(configuration_name = nil, selenium_yml_path = nil)
+    selenium_yml_path = selenium_yml_path || File.join(RAILS_ROOT, 'config', 'selenium.yml')
+    SeleniumConfig.parse_yaml(selenium_yml_path)
+    @start_tunnel = false
+    @configuration = build_configuration(configuration_name)
   end
 
-  def configuration
-    @@configuration ||= read_configuration(@@configuration_name)
-  end
-
+  # TODO: why is this class a hash and also has attr_readers?
   def [](attribute)
     case attribute
     when :username, 'username', :'access-key', 'access-key', :os, 'os', :browser, 'browser', :'browser-version', 'browser_version'
@@ -51,14 +47,32 @@ class SeleniumConfig
     end
   end
 
+  def create_driver(selenium_args = {})
+    args = selenium_client_driver_args.merge(selenium_args)
+    puts "Connecting to Selenium RC server at #{args[:host]}:#{args[:port]} (testing app at #{args[:url]})"
+    return ::Selenium::Client::Driver.new(args)
+  end
+
+  def start_tunnel?
+    @start_tunnel
+  end
+
+  def self.parse_yaml(selenium_yml_path)
+    raise "[saucelabs-adapter] could not open #{selenium_yml_path}" unless File.exist?(selenium_yml_path)
+    @@selenium_configs ||= YAML.load_file(selenium_yml_path)
+  end
+
   private
 
-  def read_configuration(configuration_name)
-    selenium_configs = YAML.load_file(@selenium_yml)
-    configuration = selenium_configs[configuration_name]
-    raise "Stanza '#{configuration_name}' not found" unless configuration
+  def build_configuration(configuration_name)
+    selenium_config = @@selenium_configs[configuration_name]
+    raise "[saucelabs-adapter] stanza '#{configuration_name}' not found in #{@selenium_yml}" unless selenium_config
 
-    if configuration['selenium_server_address'] == 'saucelabs.com'
+    configuration = selenium_config.reject {|k,v| k == 'localhost_app_server_port'}
+    @localhost_app_server_port = selenium_config['localhost_app_server_port']
+    if configuration['selenium_server_address'] == 'saucelabs.com' && !configuration['application_address']
+      raise "localhost_app_server_port is required if we are starting a tunnel (selenium_server_address is 'saucelabs.com' and application_address is not set)" unless @localhost_app_server_port
+      @start_tunnel = true
       # We are using Sauce Labs and therefore the Sauce Tunnel.
       # We need to use a masquerade hostname on the EC2 end of the tunnel that will be unique within the scope of
       # this account (e.g. pivotallabs).  Therefore we mint a fairly unique hostname here.
@@ -66,8 +80,15 @@ class SeleniumConfig
       configuration['application_address'] = "#{hostname}-#{Process.pid}.com"
     end
     configuration
-  rescue Exception => e
-    puts "[saucelabs-adapter] Disabled. (Couldn't read config '#{configuration_name}' in #{@selenium_yml}: #{e.message})"
-    {}
+  end
+
+  def selenium_client_driver_args
+    {
+      :host => self['selenium_server_address'],
+      :port => self['selenium_server_port'],
+      :browser => self['selenium_browser_key'],
+      :url => "http://#{self['application_address']}:#{self['application_port']}",
+      :timeout_in_seconds => 60
+    }
   end
 end

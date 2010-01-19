@@ -1,6 +1,10 @@
 local:
-  application_framework: :selenium
-#
+  selenium_server_address: "127.0.0.1"
+  selenium_server_port: "4444"
+  selenium_browser_key: "*chrome /Applications/Firefox.app/Contents/MacOS/firefox-bin"
+  application_address: "127.0.0.1"
+  application_port: "4000"
+
 # Possible Sauce Labs configurations as of 2009/11/19
 # From: http://saucelabs.com/products/docs/sauce-ondemand/browsers
 # os: "Windows 2003"
@@ -17,8 +21,33 @@ local:
 # os: "Linux"
 #   browser: "firefox"
 #     browser-version: "3."
-saucelabs:
-  application_framework: :external
+saucelabs: &saucelabs
+  # URL of Selenium RC server:
   selenium_server_address: "saucelabs.com"
+  selenium_server_port: "4444"
+  # Info required to start selenium browser session:
   selenium_browser_key: '{"username": "YOUR-SAUCELABS-USERNAME", "access-key": "YOUR-SAUCELABS-ACCESS-KEY", "os": "Linux", "browser": "firefox", "browser-version": "3."}'
+  # Selenium RC connects to and tests the app at this URL:
+  # If application_address is not set and selenium_server_address is "saucelabs.com", a SauceTunnel will be
+  # started and assigned an auto-generated hostname.
+  #  application_address: "proxy.pivotallabs.com"
   application_port: "80"
+  # If you are tunnelling from application_address back to localhost, use this to set the destination tunnel port,
+  # and have you app automatically started at this port.
+  localhost_app_server_port: "4000"
+
+saucelabs_jsunit:
+  <<: *saucelabs
+  #  application_address: proxy.pivotallabs.com
+  #  application_port: "20000"
+  # We are using the Jetty server for Saucelabs JsUnit selenium testing.
+  localhost_app_server_port: "8080"
+
+# This version uses a pivotal reverse tunnel instead of a SauceTunnel
+# See page: https://trac.pivotallabs.com/wiki/PunchingHoles on how to setup the tunnel.
+saucelabs_jsunit_using_pivotal_tunnel:
+  <<: *saucelabs
+  application_address: proxy.pivotallabs.com
+  application_port: "20000"
+  # We are using the Jetty server for Saucelabs JsUnit selenium testing.
+  localhost_app_server_port: "8080"

@@ -37,13 +37,13 @@ class SauceTunnel
   end
 
   def boot_tunnel_machine
-    puts "[saucelabs-adapter] Setting up tunnel to Saucelabs:"
+    puts "[saucelabs-adapter] Setting up tunnel from Saucelabs (#{@se_config['application_address']}:#{@se_config['application_port']}) to localhost:#{@se_config.localhost_app_server_port}"
     tunnel_script = File.join(File.dirname(__FILE__), 'saucerest-python/tunnel.py')
     if !File.exist?(tunnel_script)
       raise "#{tunnel_script} is missing, have you installed saucerest-python?"
     end
     tunnel_command = "python #{tunnel_script} --shutdown #{@se_config[:username]} #{@se_config[:'access-key']} " +
-                     "localhost #{@se_config.local_port}:#{@se_config['application_port']} #{@se_config['application_address']} &"
+                     "localhost #{@se_config.localhost_app_server_port}:#{@se_config['application_port']} #{@se_config['application_address']} &"
     # puts tunnel_command
     system(tunnel_command)
   end

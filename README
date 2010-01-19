@@ -6,21 +6,30 @@ To use:
 
   script/generate saucelabs_adapter
 
+  If you are not using JsUnit, you can delete the following:
+    tests/jsunit/jsunit_test_example.rb
+    lib/tasks/jsunit.rake
+    jsunit stanzas from config/selenium.yml
+
 Install the python script dependencies with:
 
-    easy_install ...
+  If you don't have Python easy_install installed, go get it:
 
-Then
+  curl -O http://peak.telecommunity.com/dist/ez_setup.py
+  sudo python ez_setup.py
 
-  rake selenium2:local
+  then...
 
-  or
+  sudo easy_install httplib2 simplejson twisted pycrypto
 
-  rake selenium2:sauce
+How to run Selenium Test::Unit tests locally and at Saucelabs.com:
 
+  rake selenium:local
 
-TODO
+  rake selenium:sauce
 
-  Refactor Polonium::NewTestCase and Polonium::TrackerSeleniumTestCase into ActiveSupport::TestCase
+How to run JsUnit tests locally and at Saucelabs.com:
 
-  Reconcile rake namespaces 'selenium' (from Pivotal Core Bundle) and 'selenium2'
+  rake jsunit:selenium_rc:local
+
+  rake jsunit:selenium_rc:sauce
