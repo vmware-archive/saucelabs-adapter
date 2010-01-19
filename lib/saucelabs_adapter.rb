@@ -11,12 +11,10 @@ if defined?(ActiveSupport)
       def configure_selenium
         selenium_config = SeleniumConfig.new(ENV['SELENIUM_ENV'])
         if defined?(Polonium)
-          puts "[saucelabs-adapter] configuring Polonium"
           polonium_config = Polonium::Configuration.instance
           selenium_config.configure_polonium(polonium_config)
         elsif defined?(Webrat)
           raise "Webrat not yet supported"
-          puts "[saucelabs-adapter] configuring Webrat"
           webrat_config = Webrat.configuration
           selenium_config.configure_webrat(webrat_config)
         end
