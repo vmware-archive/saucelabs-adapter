@@ -49,7 +49,7 @@ module JsunitSeleniumSupport
 
   def start_app_server(options = {})
     stop_app_server
-    # TODO: give this a configurable log file location
+    puts "[JsunitSeleniumSupport] starting application server:"
     app_server_logfile_path = options[:app_server_logfile_path] || "#{RAILS_ROOT}/log/jsunit_jetty_app_server.log"
     run_for_jsunit_test "ant -f #{RAILS_ROOT}/public/javascripts/jsunit/jsunit/build.xml start_server " +
                         "-Dport=#{@selenium_config.localhost_app_server_port} " +
