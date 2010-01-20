@@ -11,7 +11,9 @@ module JsunitSeleniumSupport
     @selenium_config = SeleniumConfig.new(ENV['SELENIUM_ENV'])
     start_app_server(options)
     @selenium_driver = @selenium_config.create_driver(options)
+    puts "[JsunitSeleniumSupport] calling @selenium_driver.start" if options[:debug]
     @selenium_driver.start
+    puts "[JsunitSeleniumSupport] @selenium_driver.start done"  if options[:debug]
   end
 
   def teardown_jsunit_selenium
@@ -73,7 +75,7 @@ module JsunitSeleniumSupport
 
   def run_suite(selenium_driver, suite_path, options = {})
     default_options = {
-      :timeout_in_seconds => 600
+      :timeout_in_seconds => 1200
     }
     options.reverse_merge!(default_options)
 
@@ -90,7 +92,7 @@ module JsunitSeleniumSupport
     while (Time.now - begin_time) < options[:jsunit_suite_timeout_seconds] && !tests_completed
       sleep 5
       status = selenium_driver.js_eval("window.mainFrame.mainStatus.document.getElementById('content').innerHTML")
-      status.gsub!(/^<b>Status:<\/b> /, '')
+      status.gsub!(/^<[bB]>Status:<\/[bB]> /, '')
       # Long form: window.frames['mainFrame'].frames['mainCounts'].frames['mainCountsRuns'].document.getElementById('content').innerHTML
       runs = selenium_driver.js_eval("window.mainFrame.mainCounts.mainCountsRuns.document.getElementById('content').innerHTML").strip
       fails = selenium_driver.js_eval("window.mainFrame.mainCounts.mainCountsFailures.document.getElementById('content').innerHTML").strip

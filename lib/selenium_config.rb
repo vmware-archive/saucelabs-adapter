@@ -49,18 +49,13 @@ class SeleniumConfig
     end
   end
 
-  def create_driver(selenium_args = {})
+  def create_driver(selenium_args = {}, options = {})
     args = selenium_client_driver_args.merge(selenium_args)
-    puts "Connecting to Selenium RC server at #{args[:host]}:#{args[:port]} (testing app at #{args[:url]})"
-    return ::Selenium::Client::Driver.new(args)
-  end
-
-  def using_tunnel?
-    ! %w{ localhost 127.0.0.1 }.include?(configuration['selenium_server_address'])
-  end
-
-  def use_sauce_tunnel?
-    configuration['selenium_server_address'] == 'saucelabs.com' && !configuration['application_address']
+    puts "[saucelabs-adapter] Connecting to Selenium RC server at #{args[:host]}:#{args[:port]} (testing app at #{args[:url]})"
+    puts "[saucelabs-adapter] args = #{args.inspect}"
+    driver = ::Selenium::Client::Driver.new(args)
+    puts "[saucelabs-adapter] done" if options[:debug]
+    driver
   end
 
   def start_tunnel?
@@ -74,19 +69,40 @@ class SeleniumConfig
 
   private
 
+  def use_sauce_tunnel?
+    configuration['selenium_server_address'] == 'saucelabs.com' && !configuration['application_address']
+  end
+
   def build_configuration(configuration_name)
     selenium_config = @@selenium_configs[configuration_name]
     raise "[saucelabs-adapter] stanza '#{configuration_name}' not found in #{@selenium_yml}" unless selenium_config
     @configuration = selenium_config.reject {|k,v| k == 'localhost_app_server_port'}
-    @localhost_app_server_port = selenium_config[:localhost_app_server_port]
-    if using_tunnel? && use_sauce_tunnel?
+    @localhost_app_server_port = selenium_config['localhost_app_server_port']
+
+    check_configuration(configuration_name)
+
+    if use_sauce_tunnel?
       raise "localhost_app_server_port is required if we are starting a tunnel (selenium_server_address is 'saucelabs.com' and application_address is not set)" unless @localhost_app_server_port
       @start_sauce_tunnel = true
-      # We are using Sauce Labs and therefore the Sauce Tunnel.
+      # We are using Sauce Labs and Sauce Tunnel.
       # We need to use a masquerade hostname on the EC2 end of the tunnel that will be unique within the scope of
       # this account (e.g. pivotallabs).  Therefore we mint a fairly unique hostname here.
       hostname = Socket.gethostname.split(".").first
-      @configuration[:application_address] = "#{hostname}-#{Process.pid}.com"
+      @configuration['application_address'] = "#{hostname}-#{Process.pid}.com"
+    end
+  end
+
+  def check_configuration(configuration_name)
+    mandatory_attributes = [
+      :selenium_server_address, :selenium_server_port,
+      :selenium_browser_key, :application_port
+    ]
+    errors = mandatory_attributes.inject([]) do |errors, attribute|
+      errors << "#{attribute} is required" if self[attribute].blank?
+      errors
+    end
+    if !errors.empty?
+      raise "[saucelabs-adapter] Aborting; stanza #{configuration_name} has the following errors:\n\t" + errors.join("\n\t")
     end
   end
 
@@ -96,7 +112,7 @@ class SeleniumConfig
       :port => self[:selenium_server_port],
       :browser => self[:selenium_browser_key],
       :url => "http://#{self[:application_address]}:#{self[:application_port]}",
-      :timeout_in_seconds => 60
+      :timeout_in_seconds => 600
     }
   end
 end
