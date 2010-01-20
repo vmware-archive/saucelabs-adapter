@@ -1,3 +1,5 @@
+require 'run_utils'
+
 namespace :jsunit do
   namespace :selenium_rc do
     desc "Runs JsUnit tests locally using configuration 'local' in config/selenium.yml (selenium server must already be started)"
@@ -19,7 +21,7 @@ namespace :jsunit do
 
     task :suite do
       if (File.exists?("test/jsunit/jsunit_suite.rb"))
-        run "ruby test/jsunit/jsunit_suite.rb"
+        RunUtils.run "ruby test/jsunit/jsunit_suite.rb"
       else
         puts "test/jsunit/jsunit_suite.rb not found, bailing.\nPlease create a script that will run your jsunit tests."
         exit 1

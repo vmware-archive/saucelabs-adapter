@@ -5,8 +5,8 @@ class SeleniumConfig
   def initialize(configuration_name = nil, selenium_yml_path = nil)
     selenium_yml_path = selenium_yml_path || File.join(RAILS_ROOT, 'config', 'selenium.yml')
     SeleniumConfig.parse_yaml(selenium_yml_path)
-    @start_tunnel = false
-    @configuration = build_configuration(configuration_name)
+    @start_sauce_tunnel = false
+    build_configuration(configuration_name)
   end
 
   # TODO: why is this class a hash and also has attr_readers?
@@ -53,8 +53,16 @@ class SeleniumConfig
     return ::Selenium::Client::Driver.new(args)
   end
 
+  def using_tunnel?
+    ! %w{ localhost 127.0.0.1 }.include?(configuration['selenium_server_address'])
+  end
+
+  def use_sauce_tunnel?
+    configuration['selenium_server_address'] == 'saucelabs.com' && !configuration['application_address']
+  end
+
   def start_tunnel?
-    @start_tunnel
+    @start_sauce_tunnel
   end
 
   def self.parse_yaml(selenium_yml_path)
@@ -67,19 +75,17 @@ class SeleniumConfig
   def build_configuration(configuration_name)
     selenium_config = @@selenium_configs[configuration_name]
     raise "[saucelabs-adapter] stanza '#{configuration_name}' not found in #{@selenium_yml}" unless selenium_config
-
-    configuration = selenium_config.reject {|k,v| k == 'localhost_app_server_port'}
+    @configuration = selenium_config.reject {|k,v| k == 'localhost_app_server_port'}
     @localhost_app_server_port = selenium_config['localhost_app_server_port']
-    if configuration['selenium_server_address'] == 'saucelabs.com' && !configuration['application_address']
+    if using_tunnel? && use_sauce_tunnel?
       raise "localhost_app_server_port is required if we are starting a tunnel (selenium_server_address is 'saucelabs.com' and application_address is not set)" unless @localhost_app_server_port
-      @start_tunnel = true
+      @start_sauce_tunnel = true
       # We are using Sauce Labs and therefore the Sauce Tunnel.
       # We need to use a masquerade hostname on the EC2 end of the tunnel that will be unique within the scope of
       # this account (e.g. pivotallabs).  Therefore we mint a fairly unique hostname here.
       hostname = Socket.gethostname.split(".").first
-      configuration['application_address'] = "#{hostname}-#{Process.pid}.com"
+      @configuration['application_address'] = "#{hostname}-#{Process.pid}.com"
     end
-    configuration
   end
 
   def selenium_client_driver_args

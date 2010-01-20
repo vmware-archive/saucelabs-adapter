@@ -1,4 +1,9 @@
+require 'run_utils'
+
 namespace :selenium do
+
+  Rake::Task[:'selenium:server'].clear_actions
+  
   desc "Run the selenium remote-control server"
   task :server do
     system('selenium-rc')
@@ -32,7 +37,7 @@ namespace :selenium do
 
   task :suite do
     if (File.exists?("test/selenium/selenium_suite.rb"))
-      run "ruby test/selenium/selenium_suite.rb"
+      RunUtils.run "ruby test/selenium/selenium_suite.rb"
     else
       puts "test/selenium/selenium_suite.rb not found, bailing.\nPlease create a script that will run your selenium tests."
       exit 1

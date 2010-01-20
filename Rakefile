@@ -9,7 +9,7 @@ begin
     gem.description = %Q{This gem augments Test::Unit and Polonium/Webrat to run Selenium tests in the cloud. }
     gem.email = "pair+kelly+sam@pivotallabs.com"
     gem.homepage = "http://github.com/pivotal/saucelabs-adapter"
-    gem.authors = ["Kelly Felkins & Sam Pierson"]
+    gem.authors = ["Kelly Felkins, Chad Woolley & Sam Pierson"]
     gem.files = [
      "LICENSE",
      "README.rdoc",
@@ -19,6 +19,7 @@ begin
      "lib/saucelabs_adapter.rb",
      "lib/saucelabs-adapter.rb",
      "lib/selenium_config.rb",
+     "lib/run_utils.rb",
      "lib/jsunit_selenium_support.rb",
      "lib/saucerest-ruby/saucerest.rb",
      "lib/saucerest-python/tunnel.py",

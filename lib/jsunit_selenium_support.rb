@@ -1,6 +1,7 @@
 module JsunitSeleniumSupport
 
   def requires
+    require 'run_utils'
     require "selenium/client"
     require 'lsof'
   end
@@ -47,34 +48,27 @@ module JsunitSeleniumSupport
     File.expand_path("#{file_path}/#{pid_file_name}")
   end
 
+  def local_app_server_port
+    @selenium_config.localhost_app_server_port || @selenium_config.application_port
+  end
+  
   def start_app_server(options = {})
     stop_app_server
     puts "[JsunitSeleniumSupport] starting application server:"
     app_server_logfile_path = options[:app_server_logfile_path] || "#{RAILS_ROOT}/log/jsunit_jetty_app_server.log"
-    run_for_jsunit_test "ant -f #{RAILS_ROOT}/public/javascripts/jsunit/jsunit/build.xml start_server " +
-                        "-Dport=#{@selenium_config.localhost_app_server_port} " +
+    RunUtils.run "ant -f #{RAILS_ROOT}/public/javascripts/jsunit/jsunit/build.xml start_server " +
+                        "-Dport=#{local_app_server_port} " +
                         "-DcustomJsUnitJarPath=#{RAILS_ROOT}/public/javascripts/jsunit/jsunit_jar/jsunit.jar " +
                         "-DresourceBase=#{RAILS_ROOT}/public >> #{app_server_logfile_path} 2>&1 &"
   end
 
   def stop_app_server
-    raise "oops got no localhost_app_server_port!" unless @selenium_config.localhost_app_server_port
-    while Lsof.running?(@selenium_config.localhost_app_server_port)
-      puts "Killing app server at #{@selenium_config.localhost_app_server_port}..."
-      Lsof.kill(@selenium_config.localhost_app_server_port)
+    raise "oops don't know port app server is running on" unless local_app_server_port
+    while Lsof.running?(local_app_server_port)
+      puts "Killing app server at #{local_app_server_port}..."
+      Lsof.kill(local_app_server_port)
       sleep 1
     end
-  end
-
-  def run_for_jsunit_test(command, raise_on_fail = true)
-    puts command
-    output = `#{command}`
-    if $?.success?
-      puts output
-    elsif raise_on_fail
-      raise "Command failed: #{command}:\n#{output}" unless $?.success?
-    end
-    output
   end
 
   def run_suite(selenium_driver, suite_path, options = {})
