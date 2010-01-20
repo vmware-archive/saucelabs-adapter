@@ -11,16 +11,18 @@ class SeleniumConfig
 
   # TODO: why is this class a hash and also has attr_readers?
   def [](attribute)
-    case attribute
+    case attribute.to_sym
+    when :localhost_app_server_port
+      @localhost_app_server_port
     when :username, 'username', :'access-key', 'access-key', :os, 'os', :browser, 'browser', :'browser-version', 'browser_version'
       ::JSON.parse(configuration['selenium_browser_key'])[attribute.to_s]
     else
-      configuration[attribute]
+      configuration[attribute.to_s]
     end
   end
 
   def []=(attribute, value)
-    configuration[attribute] = value
+    configuration[attribute.to_s] = value
   end
 
   # Takes a Webrat::Configuration and configures it
@@ -76,7 +78,7 @@ class SeleniumConfig
     selenium_config = @@selenium_configs[configuration_name]
     raise "[saucelabs-adapter] stanza '#{configuration_name}' not found in #{@selenium_yml}" unless selenium_config
     @configuration = selenium_config.reject {|k,v| k == 'localhost_app_server_port'}
-    @localhost_app_server_port = selenium_config['localhost_app_server_port']
+    @localhost_app_server_port = selenium_config[:localhost_app_server_port]
     if using_tunnel? && use_sauce_tunnel?
       raise "localhost_app_server_port is required if we are starting a tunnel (selenium_server_address is 'saucelabs.com' and application_address is not set)" unless @localhost_app_server_port
       @start_sauce_tunnel = true
@@ -84,16 +86,16 @@ class SeleniumConfig
       # We need to use a masquerade hostname on the EC2 end of the tunnel that will be unique within the scope of
       # this account (e.g. pivotallabs).  Therefore we mint a fairly unique hostname here.
       hostname = Socket.gethostname.split(".").first
-      @configuration['application_address'] = "#{hostname}-#{Process.pid}.com"
+      @configuration[:application_address] = "#{hostname}-#{Process.pid}.com"
     end
   end
 
   def selenium_client_driver_args
     {
-      :host => self['selenium_server_address'],
-      :port => self['selenium_server_port'],
-      :browser => self['selenium_browser_key'],
-      :url => "http://#{self['application_address']}:#{self['application_port']}",
+      :host => self[:selenium_server_address],
+      :port => self[:selenium_server_port],
+      :browser => self[:selenium_browser_key],
+      :url => "http://#{self[:application_address]}:#{self[:application_port]}",
       :timeout_in_seconds => 60
     }
   end

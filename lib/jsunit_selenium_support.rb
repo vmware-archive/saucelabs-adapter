@@ -49,7 +49,7 @@ module JsunitSeleniumSupport
   end
 
   def local_app_server_port
-    @selenium_config.localhost_app_server_port || @selenium_config.application_port
+    @selenium_config[:localhost_app_server_port] || @selenium_config[:application_port]
   end
   
   def start_app_server(options = {})
@@ -86,30 +86,30 @@ module JsunitSeleniumSupport
     tests_completed = false
     begin_time = Time.now
     status = ""
+    puts "[JsunitSeleniumSupport] Starting to poll JsUnit..." if options[:verbose]
     while (Time.now - begin_time) < options[:jsunit_suite_timeout_seconds] && !tests_completed
       sleep 5
       status = selenium_driver.js_eval("window.mainFrame.mainStatus.document.getElementById('content').innerHTML")
-      puts "[JsunitSeleniumSupport] Polling JsUnit status: #{status}" if options[:verbose]
-      if status =~ /Done/
+      status.gsub!(/^<b>Status:<\/b> /, '')
+      # Long form: window.frames['mainFrame'].frames['mainCounts'].frames['mainCountsRuns'].document.getElementById('content').innerHTML
+      runs = selenium_driver.js_eval("window.mainFrame.mainCounts.mainCountsRuns.document.getElementById('content').innerHTML").strip
+      fails = selenium_driver.js_eval("window.mainFrame.mainCounts.mainCountsFailures.document.getElementById('content').innerHTML").strip
+      errors = selenium_driver.js_eval("window.mainFrame.mainCounts.mainCountsErrors.document.getElementById('content').innerHTML").strip
+      run_count = runs.match(/\d+$/)[0].to_i
+      fail_count = fails.match(/\d+$/)[0].to_i
+      error_count = errors.match(/\d+$/)[0].to_i
+      puts "[JsunitSeleniumSupport] runs/fails/errors: #{run_count}/#{fail_count}/#{error_count} status: #{status}" if options[:verbose]
+      if status =~ /^Done /
         tests_completed = true
       end
     end
-    raise "Tests failed to complete after #{options[:jsunit_suite_timeout_seconds]}, status was '#{status}'" unless tests_completed
-
-    # Long form: window.frames['mainFrame'].frames['mainCounts'].frames['mainCountsRuns'].document.getElementById('content').innerHTML
-    runs = selenium_driver.js_eval("window.mainFrame.mainCounts.mainCountsRuns.document.getElementById('content').innerHTML").strip
-    fails = selenium_driver.js_eval("window.mainFrame.mainCounts.mainCountsFailures.document.getElementById('content').innerHTML").strip
-    errors = selenium_driver.js_eval("window.mainFrame.mainCounts.mainCountsErrors.document.getElementById('content').innerHTML").strip
-
-    run_count = runs.match(/\d+$/)[0].to_i
-    fail_count = fails.match(/\d+$/)[0].to_i
-    error_count = errors.match(/\d+$/)[0].to_i
+    raise "[JsunitSeleniumSupport] Tests failed to complete after #{options[:jsunit_suite_timeout_seconds]}, status was '#{status}'" unless tests_completed
 
     puts "[JsunitSeleniumSupport] ********** JSUnit tests complete, Runs: #{run_count}, Fails: #{fail_count}, Errors: #{error_count} **********"
 
     if (fail_count + error_count > 0)
         error_messages = selenium_driver.js_eval("window.mainFrame.mainErrors.document.getElementsByName('problemsList')[0].innerHTML")
-        puts "Error messages: #{error_messages}"
+        puts "[JsunitSeleniumSupport] Error messages: #{error_messages}"
     end
 
     (fail_count + error_count) == 0
