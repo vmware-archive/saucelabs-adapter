@@ -20,7 +20,7 @@ Install the python script dependencies with:
 
   then...
 
-  sudo easy_install httplib2 simplejson twisted pycrypto
+  sudo easy_install httplib2 simplejson twisted pycrypto pyasn1
 
 How to run Selenium Test::Unit tests locally and at Saucelabs.com:
 
