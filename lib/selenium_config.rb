@@ -104,6 +104,12 @@ class SeleniumConfig
     if !errors.empty?
       raise "[saucelabs-adapter] Aborting; stanza #{configuration_name} has the following errors:\n\t" + errors.join("\n\t")
     end
+    if self[:selenium_server_address] == 'saucelabs.com'
+      job_name = ENV['SAUCELABS_JOB_NAME'] || Socket.gethostname
+      browser_key_data = JSON.parse(self[:selenium_browser_key])
+      browser_key_data['job-name'] = job_name
+      self[:selenium_browser_key] = browser_key_data.to_json
+    end
   end
 
   def selenium_client_driver_args
