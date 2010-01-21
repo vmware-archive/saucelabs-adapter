@@ -14,6 +14,6 @@ class JsunitTest < ActiveSupport::TestCase
 
   def test_javascript
     test_page = "/jsunit/javascripts/test-pages/" + (ENV['TEST'] ? "#{ENV['TEST']}.html" : "suite.html")
-    run_jsunit_test({:testPage => test_page}, :jsunit_suite_timeout_seconds => 600, :verbose => true)
+    assert run_jsunit_test({:testPage => test_page}, :jsunit_suite_timeout_seconds => 600, :verbose => true)
   end
 end

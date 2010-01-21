@@ -9,5 +9,6 @@ class RunUtils
     if !success && options[:raise_on_fail]
       raise "Command failed: #{command}"
     end
+    success
   end
 end

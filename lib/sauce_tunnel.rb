@@ -66,6 +66,9 @@ class SauceTunnel
        end
     end
   rescue Timeout::Error
-    raise "Sauce Tunnel failed to shut down! Go visit http://saucelabs.com/tunnels and shut down the tunnel for #{@se_config[:application_address]}"
+    # Do not raise here, or else you give false negatives from test runs
+    STDERR.puts "*" * 80
+    STDERR.puts "Sauce Tunnel failed to shut down! Go visit http://saucelabs.com/tunnels and shut down the tunnel for #{@se_config[:application_address]}"
+    STDERR.puts "*" * 80
   end
 end
