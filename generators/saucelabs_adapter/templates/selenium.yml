@@ -47,6 +47,21 @@ saucelabs_jsunit:
   # We are using the Jetty server for Saucelabs JsUnit selenium testing.
   localhost_app_server_port: "8080"
 
+saucelabs_jsunit_firefox:
+  <<: *saucelabs_jsunit
+
+saucelabs_jsunit_ie:
+  <<: *saucelabs_jsunit
+  selenium_browser_key: '{"username": "YOUR-SAUCELABS-USERNAME", "access-key": "YOUR-SAUCELABS-ACCESS-KEY", "os": "Windows 2003", "browser": "iexplore", "browser-version": "7."}'
+
+saucelabs_jsunit_safari:
+  <<: *saucelabs_jsunit
+  selenium_browser_key: '{"username": "YOUR-SAUCELABS-USERNAME", "access-key": "YOUR-SAUCELABS-ACCESS-KEY", "os": "Windows 2003", "browser": "safari", "browser-version": "4."}'
+
+saucelabs_jsunit_chrome:
+  <<: *saucelabs_jsunit
+  selenium_browser_key: '{"username": "YOUR-SAUCELABS-USERNAME", "access-key": "YOUR-SAUCELABS-ACCESS-KEY", "os": "Windows 2003", "browser": "googlechrome", "browser-version": ""}'
+
 # This version uses a pivotal reverse tunnel instead of a SauceTunnel
 # See page: https://trac.pivotallabs.com/wiki/PunchingHoles on how to setup the tunnel.
 saucelabs_jsunit_using_pivotal_tunnel:

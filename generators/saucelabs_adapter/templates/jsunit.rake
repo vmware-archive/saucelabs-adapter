@@ -23,7 +23,7 @@ namespace :jsunit do
     end
 
     task :sauce_jsunit_all_env do
-      ENV['SELENIUM_ENV'] = "saucelabs_jsunit_firefox,saucelabs_jsunit_ie,saucelabs_jsunit_chrome"
+      ENV['SELENIUM_ENV'] = "saucelabs_jsunit_firefox,saucelabs_jsunit_ie,saucelabs_jsunit_chrome,saucelabs_jsunit_safari"
     end
 
     task :check_selenium_env_is_set do
