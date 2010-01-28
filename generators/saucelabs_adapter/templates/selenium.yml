@@ -39,7 +39,7 @@ saucelabs: &saucelabs
   # If you are tunnelling from application_address back to localhost, use this to set the destination tunnel port,
   # and have you app automatically started at this port.
   localhost_app_server_port: "4000"
-  tunnel_startup_timeout: "240"
+  tunnel_startup_timeout: 240
 
 saucelabs_jsunit:
   <<: *saucelabs

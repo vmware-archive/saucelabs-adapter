@@ -24,7 +24,7 @@ class SauceTunnel
   end
   
   def tunnel_startup_timeout
-    @se_config[:tunnel_startup_timeout] || DEFAULT_TUNNEL_STARTUP_TIMEOUT
+    (@se_config[:tunnel_startup_timeout] || DEFAULT_TUNNEL_STARTUP_TIMEOUT).to_i
   end
 
   def shutdown
