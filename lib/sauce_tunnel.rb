@@ -1,6 +1,7 @@
 require 'saucerest-ruby/saucerest'
 
 class SauceTunnel
+  DEFAULT_TUNNEL_STARTUP_TIMEOUT = 240
 
   def initialize(se_config)
     raise "SauceTunnel.new requires a SeleniumConfig argument" unless se_config.is_a?(SeleniumConfig)
@@ -11,7 +12,7 @@ class SauceTunnel
 
   def start_tunnel
     boot_tunnel_machine
-    Timeout::timeout(240) do
+    Timeout::timeout(tunnel_startup_timeout) do
       while !tunnel_is_up?
         sleep 10
       end
@@ -19,7 +20,11 @@ class SauceTunnel
     end
     STDOUT.puts "[saucelabs-adapter] Tunnel ID #{@tunnel_id} for #{@se_config[:application_address]} is up."
   rescue Timeout::Error
-      raise "Tunnel did not come up within 2 minutes"
+      raise "Tunnel did not come up within #{tunnel_startup_timeout} seconds."
+  end
+  
+  def tunnel_startup_timeout
+    @se_config[:tunnel_startup_timeout] || DEFAULT_TUNNEL_STARTUP_TIMEOUT
   end
 
   def shutdown
@@ -37,7 +42,7 @@ class SauceTunnel
   end
 
   def boot_tunnel_machine
-    puts "[saucelabs-adapter] Setting up tunnel from Saucelabs (#{@se_config[:application_address]}:#{@se_config[:application_port]}) to localhost:#{@se_config[:localhost_app_server_port]}"
+    puts "[saucelabs-adapter] Setting up tunnel from Saucelabs (#{@se_config[:application_address]}:#{@se_config[:application_port]}) to localhost:#{@se_config[:localhost_app_server_port]} - waiting #{tunnel_startup_timeout} seconds for tunnel to start..."
     tunnel_script = File.join(File.dirname(__FILE__), 'saucerest-python/tunnel.py')
     if !File.exist?(tunnel_script)
       raise "#{tunnel_script} is missing, have you installed saucerest-python?"
