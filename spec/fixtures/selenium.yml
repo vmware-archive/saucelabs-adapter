@@ -1,0 +1,7 @@
+stanza_saucelabs_firefox_linux:
+  selenium_server_address: "saucelabs.com"
+  selenium_server_port: "4444"
+  selenium_browser_key: '{"username": "YOUR-SAUCELABS-USERNAME", "access-key": "YOUR-SAUCELABS-ACCESS-KEY", "os": "Linux", "browser": "firefox", "browser-version": "3."}'
+  application_port: "80"
+  localhost_app_server_port: "4000"
+  tunnel_startup_timeout: 240

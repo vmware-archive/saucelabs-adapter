@@ -1,6 +1,19 @@
 require 'rubygems'
 require 'rake'
 
+require 'rake'
+require 'spec'
+require 'spec/rake/spectask'
+
+desc 'Default: run unit tests.'
+task :default => :spec
+
+desc 'Test the saucelabs-adapter plugin.'
+Spec::Rake::SpecTask.new(:spec) do |t|
+  t.libs << 'lib'
+  t.verbose = true
+end
+
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
@@ -67,7 +80,7 @@ end
 
 task :test => :check_dependencies
 
-task :default => :test
+#task :default => :test
 
 require 'rake/rdoctask'
 Rake::RDocTask.new do |rdoc|
