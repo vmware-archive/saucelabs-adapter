@@ -1,4 +1,4 @@
-require 'run_utils'
+require 'saucelabs_adapter/run_utils'
 
 namespace :selenium do
 

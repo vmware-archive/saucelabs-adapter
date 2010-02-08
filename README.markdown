@@ -81,3 +81,13 @@ The saucelabs-adapter performs two functions when it detects you are running a t
 1. It sets up a SauceTunnel before the test run starts and tears it down after the test ends.  This happens once for the entire test run.
 
 2. It configures the selenium client to connect to the correct address at saucelabs.com.  This happens at the start of each test.
+
+Release Notes
+=============
+
+x.x.NEXT
+--------
+The gem has been reorganized to better conform with Gem best-practices.  The rakefile generator has changed.
+If you are upgrading, you will need to rerun the generator and overwrite lib/tasks/saucelabs_adapter.rake,
+or just change line 1 of that file to read:
+        require 'saucelabs_adapter/run_utils'
