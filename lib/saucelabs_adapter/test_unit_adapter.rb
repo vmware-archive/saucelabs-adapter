@@ -12,7 +12,6 @@ if defined?(ActiveSupport)
           polonium_config = Polonium::Configuration.instance
           selenium_config.configure_polonium(polonium_config)
         elsif defined?(Webrat)
-          raise "Webrat not yet supported"
           webrat_config = Webrat.configuration
           selenium_config.configure_webrat(webrat_config)
         end
@@ -31,7 +30,7 @@ if defined?(Test)
     def attach_to_mediator_with_sauce_tunnel
       attach_to_mediator_without_sauce_tunnel
       @selenium_config = SaucelabsAdapter::SeleniumConfig.new(ENV['SELENIUM_ENV'])
-      if @selenium_config.start_tunnel?
+      if @selenium_config.start_sauce_tunnel?
         @mediator.add_listener(Test::Unit::UI::TestRunnerMediator::STARTED, &method(:setup_tunnel))
         @mediator.add_listener(Test::Unit::UI::TestRunnerMediator::FINISHED, &method(:teardown_tunnel))
       end

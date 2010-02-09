@@ -32,7 +32,7 @@ module SaucelabsAdapter
         :autorun => "true",
         :setupPageTimeout => "60",
         :pageLoadTimeout => "60",
-        :suppressCacheBuster => (@selenium_config['selenium_server_address'] == 'saucelabs.com').to_s
+        :suppressCacheBuster => (@selenium_config.selenium_server_address == 'saucelabs.com').to_s
       }
       jsunit_params.reverse_merge!(default_jsunit_params)
 
@@ -52,7 +52,7 @@ module SaucelabsAdapter
     end
 
     def local_app_server_port
-      @selenium_config[:localhost_app_server_port] || @selenium_config[:application_port]
+      @selenium_config.tunnel_to_localhost_port || @selenium_config.application_port
     end
 
     def start_app_server(options = {})

@@ -1,39 +1,27 @@
 local:
   selenium_server_address: "127.0.0.1"
-  selenium_server_port: "4444"
-  selenium_browser_key: "*chrome /Applications/Firefox.app/Contents/MacOS/firefox-bin"
-  application_address: "127.0.0.1"
-  application_port: "4000"
-
-stanza_saucelabs_firefox_linux:
-  selenium_server_address: "saucelabs.com"
-  selenium_server_port: "4444"
-  selenium_browser_key: '{"username": "YOUR-SAUCELABS-USERNAME", "access-key": "YOUR-SAUCELABS-ACCESS-KEY", "os": "Linux", "browser": "firefox", "browser-version": "3."}'
-  application_port: "80"
-  localhost_app_server_port: "4000"
-  tunnel_startup_timeout: 240
-
-for_future_use_stanza_saucelabs_firefox_linux_saucetunnel:
-  selenium_server_address: "127.0.0.1"
   selenium_server_port: 4444
-
   selenium_browser_key: "*chrome /Applications/Firefox.app/Contents/MacOS/firefox-bin"
-
-  saucelabs_username: "YOUR-SAUCELABS-USERNAME"
-  saucelabs_access_key: "YOUR-SAUCELABS-ACCESS-KEY"
-  saucelabs_broswer_os: "Windows 2003"
-  saucelabs_browser: "iexplore"
-  saucelabs_browser_version: "7."
-
   application_address: "127.0.0.1"
   application_port: 4000
 
-  # Setup tunnel from <application_address>:<application_port> to localhost:<localhost_app_server_port>
+stanza_saucelabs_firefox_linux_saucetunnel:
+  # Selenium RC server
+  selenium_server_address: "saucelabs.com"
+  selenium_server_port: 4444
+  # Browser to drive
+  saucelabs_username: "YOUR-SAUCELABS-USERNAME"
+  saucelabs_access_key: "YOUR-SAUCELABS-ACCESS-KEY"
+  saucelabs_browser_os: "Linux"
+  saucelabs_browser: "firefox"
+  saucelabs_browser_version: "3."
+  # Browser connects to this host:
+  application_address: "this will be ovewritten if tunnel_method == :saucetunnel"
+  application_port: 80
+  # App host is actually a tunnel that tunnels from <application_address>:<application_port> to localhost:<tunnel_to_localhost_port>
   tunnel_method: :saucetunnel
-  tunnel_to_local_port: 4000
+  tunnel_to_localhost_port: 4000
   tunnel_startup_timeout: 240
-
-
 
 
 

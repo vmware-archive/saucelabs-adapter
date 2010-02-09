@@ -23,15 +23,15 @@ describe "SeleniumConfig" do
       @selenium_config = SaucelabsAdapter::SeleniumConfig.new('local', SELENIUM_YML_FIXTURE_FILE)
     end
 
-    describe "#start_tunnel?" do
+    describe "#start_sauce_tunnel?" do
       it "should return false" do
-        @selenium_config.start_tunnel?.should be_false
+        @selenium_config.start_sauce_tunnel?.should be_false
       end
     end
 
     describe "selenium_browser_key" do
       it "should contain just the string from the yml file" do
-        @selenium_config['selenium_browser_key'].should == "*chrome /Applications/Firefox.app/Contents/MacOS/firefox-bin"
+        @selenium_config.selenium_browser_key.should == "*chrome /Applications/Firefox.app/Contents/MacOS/firefox-bin"
       end
     end
 
@@ -43,7 +43,7 @@ describe "SeleniumConfig" do
       it "should call the appropriate configuration methods on the polonium configuration object" do
         @polonium_configuration.should_receive(:'selenium_server_host=').with("127.0.0.1")
         @polonium_configuration.should_receive(:'selenium_server_port=').with("4444")
-        @polonium_configuration.should_receive(:'browser=').with(@selenium_config[:selenium_browser_key])
+        @polonium_configuration.should_receive(:'browser=').with(@selenium_config.selenium_browser_key)
         @polonium_configuration.should_receive(:'external_app_server_host=').with("127.0.0.1")
         @polonium_configuration.should_receive(:'external_app_server_port=').with("4000")
 
@@ -59,7 +59,7 @@ describe "SeleniumConfig" do
       it "should call the appropriate configuration methods on the webrat configuration object" do
         @webrat_configuration.should_receive(:'selenium_server_address=').with("127.0.0.1")
         @webrat_configuration.should_receive(:'selenium_server_port=').with("4444")
-        @webrat_configuration.should_receive(:'selenium_browser_key=').with(@selenium_config[:selenium_browser_key])
+        @webrat_configuration.should_receive(:'selenium_browser_key=').with(@selenium_config.selenium_browser_key)
         @webrat_configuration.should_receive(:'application_address=').with("127.0.0.1")
         @webrat_configuration.should_receive(:'application_port=').with("4000")
 
@@ -70,18 +70,18 @@ describe "SeleniumConfig" do
 
   context "given a saucelabs/firefix/linux configuration" do
     before do
-      @selenium_config = SaucelabsAdapter::SeleniumConfig.new('stanza_saucelabs_firefox_linux', SELENIUM_YML_FIXTURE_FILE)
+      @selenium_config = SaucelabsAdapter::SeleniumConfig.new('stanza_saucelabs_firefox_linux_saucetunnel', SELENIUM_YML_FIXTURE_FILE)
     end
 
-    describe "#start_tunnel?" do
+    describe "#start_sauce_tunnel?" do
       it "should return true" do
-        @selenium_config.start_tunnel?.should be_true
+        @selenium_config.start_sauce_tunnel?.should be_true
       end
     end
 
     describe "selenium_browser_key" do
       before do
-        @browser_data = JSON.parse(@selenium_config[:selenium_browser_key])
+        @browser_data = JSON.parse(@selenium_config.selenium_browser_key)
       end
 
       {
@@ -109,8 +109,8 @@ describe "SeleniumConfig" do
       it "should call the appropriate configuration methods on the polonium configuration object" do
         @polonium_configuration.should_receive(:'selenium_server_host=').with("saucelabs.com")
         @polonium_configuration.should_receive(:'selenium_server_port=').with("4444")
-        @polonium_configuration.should_receive(:'browser=').with(@selenium_config[:selenium_browser_key])
-        @polonium_configuration.should_receive(:'external_app_server_host=').with(@selenium_config[:application_address])
+        @polonium_configuration.should_receive(:'browser=').with(@selenium_config.selenium_browser_key)
+        @polonium_configuration.should_receive(:'external_app_server_host=').with(@selenium_config.application_address)
         @polonium_configuration.should_receive(:'external_app_server_port=').with("80")
 
         @selenium_config.configure_polonium(@polonium_configuration)
@@ -125,8 +125,8 @@ describe "SeleniumConfig" do
       it "should call the appropriate configuration methods on the webrat configuration object" do
         @webrat_configuration.should_receive(:'selenium_server_address=').with("saucelabs.com")
         @webrat_configuration.should_receive(:'selenium_server_port=').with("4444")
-        @webrat_configuration.should_receive(:'selenium_browser_key=').with(@selenium_config[:selenium_browser_key])
-        @webrat_configuration.should_receive(:'application_address=').with(@selenium_config[:application_address])
+        @webrat_configuration.should_receive(:'selenium_browser_key=').with(@selenium_config.selenium_browser_key)
+        @webrat_configuration.should_receive(:'application_address=').with(@selenium_config.application_address)
         @webrat_configuration.should_receive(:'application_port=').with("80")
 
         @selenium_config.configure_webrat(@webrat_configuration)
@@ -142,7 +142,7 @@ describe "SeleniumConfig" do
         @driver.args[:host].should == 'saucelabs.com'
         @driver.args[:port].should == '4444'
         @driver.args[:browser].should_not be_blank
-        @driver.args[:url].should == "http://#{@selenium_config[:application_address]}:80"
+        @driver.args[:url].should == "http://#{@selenium_config.application_address}:80"
         @driver.args[:timeout_in_seconds].should == 600        
       end
     end
