@@ -16,33 +16,22 @@ Quick Start
 
         gem install saucelabs-adapter --source gems.pivotallabs.com
 
-3. Install the python script dependencies with:
-
-    If you don't have Python easy_install installed, download and install it:
-
-        curl -O http://peak.telecommunity.com/dist/ez_setup.py
-        sudo python ez_setup.py
-
-    then install the Python dependencies:
-
-        sudo easy_install httplib2 simplejson twisted pycrypto pyasn1
-
-4. Run the saucelabs_adapter generator in your project:
+3. Run the saucelabs_adapter generator in your project:
 
         cd your_project
 
         script/generate saucelabs_adapter
 
-5. Configure it.  In config/selenium.yml, replace YOUR-SAUCELABS-USERNAME and
+4. Configure it.  In config/selenium.yml, replace YOUR-SAUCELABS-USERNAME and
    YOUR-SAUCELABS-ACCESS-KEY with your saucelabs.com account information.
 
-6. If you are not using JsUnit, you can delete the following generated files:
+5. If you are not using JsUnit, you can delete the following generated files:
 
         tests/jsunit/jsunit_test_example.rb
         lib/tasks/jsunit.rake
         jsunit stanzas from config/selenium.yml
 
-7. Run Tests
+6. Run Tests
 
     To run Selenium Test::Unit tests locally:
 
@@ -70,7 +59,7 @@ When running rake selenium:sauce, intermixed with your test output you should se
         [saucelabs-adapter] Tunnel ID 717909c571b8319dc5ae708b689fd7f5 for yourhostname-12345.com is up.
         Started
         ....................
-        [saucelabs-adapter] Shutting down tunnel to Saucelabs...closed
+        [saucelabs-adapter] Shutting down tunnel to Saucelabs...
         [saucelabs-adapter] done.
 
 What it Does
@@ -82,12 +71,35 @@ The saucelabs-adapter performs two functions when it detects you are running a t
 
 2. It configures the selenium client to connect to the correct address at saucelabs.com.  This happens at the start of each test.
 
-Release Notes
-=============
+CHANGES
+=======
 
-x.x.NEXT
---------
-The gem has been reorganized to better conform with Gem best-practices.  The rakefile generator has changed.
-If you are upgrading, you will need to rerun the generator and overwrite lib/tasks/saucelabs_adapter.rake,
+0.7.0
+-----
+- The gem has been reorganized to better conform with Gem best-practices.
+
+- The rakefile generator has changed.  If you are upgrading, you will need to rerun the generator and overwrite lib/tasks/saucelabs_adapter.rake,
 or just change line 1 of that file to read:
+
         require 'saucelabs_adapter/run_utils'
+
+- The selenium.yml syntax has changed to break out all the saucelabs info into separate lines, and the tunnel method is now explicitly stated:
+
+    - Old:
+            selenium_browser_key: '{"username": "YOUR-SAUCELABS-USERNAME", "access-key": "YOUR-SAUCELABS-ACCESS-KEY", "os": "Linux", "browser": "firefox", "browser-version": "3."}'
+            #
+            localhost_app_server_port: "4000"
+            tunnel_startup_timeout: 240
+
+    - New:
+            saucelabs_username: "YOUR-SAUCELABS-USERNAME"
+            saucelabs_access_key: "YOUR-SAUCELABS-ACCESS-KEY"
+            saucelabs_browser_os: "Linux"
+            saucelabs_browser: "firefox"
+            saucelabs_browser_version: "3."
+            #
+            tunnel_method: :saucetunnel
+            tunnel_to_localhost_port: 4000
+            tunnel_startup_timeout: 240
+            
+- The dependency on Python has been removed.

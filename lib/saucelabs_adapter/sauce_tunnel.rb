@@ -1,3 +1,6 @@
+require 'net/ssh'
+require 'net/ssh/gateway'
+require 'saucelabs_adapter/gateway'
 require 'saucerest-ruby/saucerest'
 
 module SaucelabsAdapter
@@ -12,16 +15,10 @@ module SaucelabsAdapter
     end
 
     def start_tunnel
+      puts "[saucelabs-adapter] Setting up tunnel from Saucelabs (#{@se_config.application_address}:#{@se_config.application_port}) to localhost:#{@se_config.tunnel_to_localhost_port} - waiting #{tunnel_startup_timeout} seconds for tunnel to start..."
       boot_tunnel_machine
-      Timeout::timeout(tunnel_startup_timeout) do
-        while !tunnel_is_up?
-          sleep 10
-        end
-        @tunnel_id = tunnel_info['_id']
-      end
-      STDOUT.puts "[saucelabs-adapter] Tunnel ID #{@tunnel_id} for #{@se_config.application_address} is up."
-    rescue Timeout::Error
-        raise "Tunnel did not come up within #{tunnel_startup_timeout} seconds."
+      setup_ssh_reverse_tunnel
+      say "Tunnel ID #{@tunnel_id} for #{@se_config.application_address} is up."
     end
 
     def tunnel_startup_timeout
@@ -29,53 +26,96 @@ module SaucelabsAdapter
     end
 
     def shutdown
-      STDOUT << "[saucelabs-adapter] Shutting down tunnel to Saucelabs..."
+      say "Shutting down tunnel to Saucelabs..."
+      teardown_ssh_reverse_tunnel
       shutdown_tunnel_machine
-      STDOUT.puts "[saucelabs-adapter] done."
+      say "done."
     end
 
     private
 
     def connect_to_rest_api
       sauce_api_url = "https://#{@se_config.saucelabs_username}:#{@se_config.saucelabs_access_key}@saucelabs.com/rest/#{@se_config.saucelabs_username}/"
-      # puts "[saucelabs-adapter] Connecting to Sauce API at #{sauce_api_url}"
+      # puts "[saucelabs-adapter] Connecting to Sauce API at #{sauce_api_url}" if ENV['SAUCELABS_ADAPTER_DEBUG']
       @sauce_api_endpoint = SauceREST::Client.new sauce_api_url
     end
 
     def boot_tunnel_machine
-      puts "[saucelabs-adapter] Setting up tunnel from Saucelabs (#{@se_config.application_address}:#{@se_config.application_port}) to localhost:#{@se_config.tunnel_to_localhost_port} - waiting #{tunnel_startup_timeout} seconds for tunnel to start..."
-      tunnel_script = File.join(File.dirname(__FILE__), '..', 'saucerest-python', 'tunnel.py')
-      if !File.exist?(tunnel_script)
-        raise "#{tunnel_script} is missing, have you installed saucerest-python?"
+      debug "Booting tunnel host:"
+      response = @sauce_api_endpoint.create(:tunnel, 'DomainNames' => [@se_config.application_address])
+      if response.has_key? 'error'
+        raise "Error booting tunnel machine: " + response['error']
       end
-      tunnel_command = "python #{tunnel_script} --shutdown #{@se_config.saucelabs_username} #{@se_config.saucelabs_access_key} " +
-                       "localhost #{@se_config.tunnel_to_localhost_port}:#{@se_config.application_port} #{@se_config.application_address} &"
-      # puts tunnel_command
-      system(tunnel_command)
-    end
+      @tunnel_id = response['id']
+      debug "Tunnel id: %s" % @tunnel_id
 
-    def tunnel_is_up?
-      info = tunnel_info
-      info && info['Status'] == 'running'
-    end
-
-    def tunnel_info
-      tunnels = @sauce_api_endpoint.list(:tunnel)
-      tunnels.detect { |t| t['DomainNames'].include?(@se_config.application_address) }
+      Timeout::timeout(tunnel_startup_timeout) do
+        last_status = tunnel_status = nil
+        begin
+          sleep 5
+          @tunnel_info = @sauce_api_endpoint.get :tunnel, @tunnel_id
+          tunnel_status = @tunnel_info['Status']
+          debug "  tunnel host is #{tunnel_status}" if tunnel_status != last_status
+          last_status = tunnel_status
+          case tunnel_status
+            when 'new', 'booting'
+              # Alrighty. Keep going.
+            when 'running'
+              # We're done.
+            when 'terminated'
+              raise "There was a problem booting the tunnel machine: it terminated (%s)" % tunnel_info.inspect
+            else
+              raise "Unknown tunnel machine status: #{tunnel_status} (#{@tunnel_info.inspect})"
+          end
+        end while tunnel_status != 'running'
+      end
+    rescue Timeout::Error
+      error_message = "Tunnel did not come up in #{tunnel_starup_timneout} seconds."
+      STDERR.puts "[saucelabs-adapter] " + error_message
+      shutdown_tunnel_machine
+      raise error_message
     end
 
     def shutdown_tunnel_machine
+      return unless @sauce_api_endpoint && @tunnel_id
+      debug "Shutting down tunnel machine:"
       Timeout::timeout(120) do
         @sauce_api_endpoint.delete :tunnel, @tunnel_id
-        while tunnel_info
-          sleep 10
-         end
+        status = nil
+        begin
+          sleep 5
+          status = @sauce_api_endpoint.get(:tunnel, @tunnel_id)['Status']
+          debug status
+        end while status != 'terminated'
       end
     rescue Timeout::Error
       # Do not raise here, or else you give false negatives from test runs
       STDERR.puts "*" * 80
       STDERR.puts "Sauce Tunnel failed to shut down! Go visit http://saucelabs.com/tunnels and shut down the tunnel for #{@se_config.application_address}"
       STDERR.puts "*" * 80
+    end
+
+    def setup_ssh_reverse_tunnel
+      debug "Starting ssh reverse tunnel"
+      @gateway = Net::SSH::Gateway.new(@tunnel_info['Host'], @se_config.saucelabs_username, {:password => @se_config.saucelabs_access_key})
+      @port = @gateway.open_remote(@se_config.tunnel_to_localhost_port, "127.0.0.1", @se_config.application_port, "0.0.0.0")
+    end
+
+    def teardown_ssh_reverse_tunnel
+      if @gateway
+        debug "Shutting down ssh reverse tunnel"
+        @gateway.close(@port) if @port
+        @gateway.shutdown! if @gateway
+        debug "done."
+      end
+    end
+
+    def say(what)
+      STDOUT.puts "[saucelabs-adapter] " + what
+    end
+
+    def debug(what)
+      STDOUT.puts "[saucelabs-adapter]   " + what if ENV['SAUCELABS_ADAPTER_DEBUG']
     end
   end
 end

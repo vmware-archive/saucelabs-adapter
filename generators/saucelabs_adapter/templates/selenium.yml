@@ -29,17 +29,21 @@ saucelabs: &saucelabs
   # URL of Selenium RC server:
   selenium_server_address: "saucelabs.com"
   selenium_server_port: "4444"
-  # Info required to start selenium browser session:
-  selenium_browser_key: '{"username": "YOUR-SAUCELABS-USERNAME", "access-key": "YOUR-SAUCELABS-ACCESS-KEY", "os": "Linux", "browser": "firefox", "browser-version": "3."}'
-  # Selenium RC connects to and tests the app at this URL:
-  # If application_address is not set and selenium_server_address is "saucelabs.com", a SauceTunnel will be
-  # started and assigned an auto-generated hostname.
-  #  application_address: "proxy.pivotallabs.com"
-  application_port: "80"
-  # If you are tunnelling from application_address back to localhost, use this to set the destination tunnel port,
-  # and have you app automatically started at this port.
-  localhost_app_server_port: "4000"
+  # Saucelabs credentials / Browser to drive
+  saucelabs_username: "YOUR-SAUCELABS-USERNAME"
+  saucelabs_access_key: "YOUR-SAUCELABS-ACCESS-KEY"
+  saucelabs_browser_os: "Linux"
+  saucelabs_browser: "firefox"
+  saucelabs_browser_version: "3."
+  # Selenium RC browser connects to and tests the app at this URL:
+  application_address: "this will be ovewritten if tunnel_method == :saucetunnel"
+  application_port: 80
+  # App host is actually a tunnel that tunnels from <application_address>:<application_port> to localhost:<tunnel_to_localhost_port>
+  tunnel_method: :saucetunnel
+  tunnel_to_localhost_port: 4000
   tunnel_startup_timeout: 240
+
+
 
 saucelabs_jsunit:
   <<: *saucelabs

@@ -30,6 +30,7 @@ begin
      "VERSION",
      "lib/saucelabs_adapter.rb",
      "lib/saucelabs-adapter.rb",
+     "lib/saucelabs_adapter/gateway.rb",
      "lib/saucelabs_adapter/run_utils.rb",
      "lib/saucelabs_adapter/sauce_tunnel.rb",
      "lib/saucelabs_adapter/selenium_config.rb",
@@ -47,7 +48,9 @@ begin
      "generators/saucelabs_adapter/templates/jsunit.rake",
      "generators/saucelabs_adapter/templates/jsunit_suite_example.rb"
   ]
-    gem.add_dependency 'rest-client', '>= 1.0.3'
+    gem.add_dependency 'rest-client', '>= 1.2.0'
+    gem.add_dependency 'net-ssh', '>= 2.0.12'
+    gem.add_dependency 'net-ssh-gateway', '>= 1.0.1'
     gem.add_dependency 'selenium-client', '>= 1.2.17'
     gem.add_dependency 'lsof', '>= 0.3.0'
     # gem.add_development_dependency "thoughtbot-shoulda", ">= 0"
