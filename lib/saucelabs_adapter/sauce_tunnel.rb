@@ -1,7 +1,7 @@
 require 'net/ssh'
 require 'net/ssh/gateway'
-require 'saucelabs_adapter/gateway'
 require 'saucerest-ruby/saucerest'
+require 'saucerest-ruby/gateway'
 
 module SaucelabsAdapter
   class SauceTunnel
