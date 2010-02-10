@@ -18,6 +18,7 @@ module SaucelabsAdapter
       puts "[saucelabs-adapter] Setting up tunnel from Saucelabs (#{@se_config.application_address}:#{@se_config.application_port}) to localhost:#{@se_config.tunnel_to_localhost_port} - waiting #{tunnel_startup_timeout} seconds for tunnel to start..."
       boot_tunnel_machine
       setup_ssh_reverse_tunnel
+      # WARNING: JsUnit depends upon the format of this output line:
       say "Tunnel ID #{@tunnel_id} for #{@se_config.application_address} is up."
     end
 
@@ -98,7 +99,7 @@ module SaucelabsAdapter
     def setup_ssh_reverse_tunnel
       debug "Starting ssh reverse tunnel"
       @gateway = Net::SSH::Gateway.new(@tunnel_info['Host'], @se_config.saucelabs_username, {:password => @se_config.saucelabs_access_key})
-      @port = @gateway.open_remote(@se_config.tunnel_to_localhost_port, "127.0.0.1", @se_config.application_port, "0.0.0.0")
+      @port = @gateway.open_remote(@se_config.tunnel_to_localhost_port.to_i, "127.0.0.1", @se_config.application_port.to_i, "0.0.0.0")
     end
 
     def teardown_ssh_reverse_tunnel
