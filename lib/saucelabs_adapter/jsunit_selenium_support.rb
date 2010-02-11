@@ -2,7 +2,7 @@ module SaucelabsAdapter
   module JsunitSeleniumSupport
 
     def requires
-      require 'saucelabs_adpater/run_utils'
+      require 'saucelabs_adapter/run_utils'
       require "selenium/client"
       require 'lsof'
     end

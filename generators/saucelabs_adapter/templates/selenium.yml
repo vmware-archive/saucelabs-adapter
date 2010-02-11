@@ -11,20 +11,15 @@ local_jsunit:
 
 # Possible Sauce Labs configurations as of 2009/11/19
 # From: http://saucelabs.com/products/docs/sauce-ondemand/browsers
-# os: "Windows 2003"
-#   browser: "iexplore"
-#     browser-version: "6.", "7.", "8."
-#   browser: "firefox"
-#     browser-version: "2.", "3.0", "3.5"
-#   browser: "safari"
-#     browser-version: "3.", "4."
-#   browser: "opera"
-#     browser-version: "9."
-#   browser: "googlechrome"
-#     browser-version: ""
-# os: "Linux"
-#   browser: "firefox"
-#     browser-version: "3."
+#
+# saucelabs_browser_os  saucelabs_browser   saucelabs_browser_version (pick one)
+#
+# "Windows 2003"        "iexplore"          "6.", "7.", "8."
+#                       "firefox"           "2.", "3.0", "3.5"
+#                       "safari"            "3.", "4."
+#                       "opera"             "9."
+#                       "googlechrome"      ""
+# "Linux"               "firefox"           "3."
 saucelabs: &saucelabs
   # URL of Selenium RC server:
   selenium_server_address: "saucelabs.com"
