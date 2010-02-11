@@ -3,7 +3,7 @@ Saucelabs-Adapter
 
 Saucelabs-adapter provides the glue to connect Rails Selenium tests to saucelabs.com.
 
-Currently it only supports tests written using Polonium and JSUnit.
+Currently it only supports tests written using Webrat, Polonium and JSUnit.
 
 Quick Start
 -----------
@@ -61,6 +61,15 @@ When running rake selenium:sauce, intermixed with your test output you should se
         ....................
         [saucelabs-adapter] Shutting down tunnel to Saucelabs...
         [saucelabs-adapter] done.
+
+Continuous Integration
+----------------------
+Sauce Labs now lets you set the name of a test job.
+By default the SaucelabsAdapter will set this to the name of the machine it is currently running on,
+however you may override this by setting the environment variable SAUCELABS_JOB_NAME.
+
+This can be useful if you run many tests from the same CI machine and would like to differentiate between
+them without actually viewing the video.
 
 What it Does
 ------------
