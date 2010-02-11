@@ -64,7 +64,7 @@ module SaucelabsAdapter
             when 'running'
               # We're done.
             when 'terminated'
-              raise "There was a problem booting the tunnel machine: it terminated (%s)" % @tunnel_info.inspect
+              raise "There was a problem booting the tunnel machine: it terminated (%s)" % @tunnel_info['Error']
             else
               raise "Unknown tunnel machine status: #{tunnel_status} (#{@tunnel_info.inspect})"
           end
