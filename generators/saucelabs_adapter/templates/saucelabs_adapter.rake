@@ -1,8 +1,15 @@
 require 'saucelabs_adapter/run_utils'
 
+class Rake::Task
+  def self.exists?(name)
+    tasks.any? { |t| t.name == name }
+  end
+end
+
 namespace :selenium do
 
-  Rake::Task[:'selenium:server'].clear_actions
+  # Rake tasks are cumulative, and some old plugins are still defining selenium:server, so clear it.
+  Rake::Task[:'selenium:server'].clear_actions if Rake::Task.exists?('selenium:server')
   
   desc "Run the selenium remote-control server"
   task :server do
