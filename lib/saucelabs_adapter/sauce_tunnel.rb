@@ -15,7 +15,7 @@ module SaucelabsAdapter
     end
 
     def start_tunnel
-      puts "[saucelabs-adapter] Setting up tunnel from Saucelabs (#{@se_config.application_address}:#{@se_config.application_port}) to localhost:#{@se_config.tunnel_to_localhost_port} - waiting #{tunnel_startup_timeout} seconds for tunnel to start..."
+      puts "[saucelabs-adapter] Setting up tunnel from Saucelabs (#{@se_config.application_address}:#{@se_config.application_port}) to localhost:#{@se_config.tunnel_to_localhost_port} (timeout #{tunnel_startup_timeout}s)..."
       boot_tunnel_machine
       setup_ssh_reverse_tunnel
       # WARNING: JsUnit depends upon the format of this output line:
@@ -71,7 +71,7 @@ module SaucelabsAdapter
         end while tunnel_status != 'running'
       end
     rescue Timeout::Error
-      error_message = "Tunnel did not come up in #{tunnel_starup_timneout} seconds."
+      error_message = "Tunnel did not come up in #{tunnel_startup_timneout} seconds."
       STDERR.puts "[saucelabs-adapter] " + error_message
       shutdown_tunnel_machine
       raise error_message
