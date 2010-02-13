@@ -62,6 +62,11 @@ When running rake selenium:sauce, intermixed with your test output you should se
         [saucelabs-adapter] Shutting down tunnel to Saucelabs...
         [saucelabs-adapter] done.
 
+In Case of Problems
+-------------------
+Try setting environment variable SAUCELABS_ADAPTER_DEBUG to "true".  This enables more verbose output.
+
+
 Continuous Integration
 ----------------------
 Sauce Labs now lets you set the name of a test job.

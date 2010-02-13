@@ -15,7 +15,7 @@ module SaucelabsAdapter
     end
 
     def start_tunnel
-      puts "[saucelabs-adapter] Setting up tunnel from Saucelabs (#{@se_config.application_address}:#{@se_config.application_port}) to localhost:#{@se_config.tunnel_to_localhost_port} (timeout #{tunnel_startup_timeout}s)..."
+      say "Setting up tunnel from Saucelabs (#{@se_config.application_address}:#{@se_config.application_port}) to localhost:#{@se_config.tunnel_to_localhost_port} (timeout #{tunnel_startup_timeout}s)..."
       boot_tunnel_machine
       setup_ssh_reverse_tunnel
       # WARNING: JsUnit depends upon the format of this output line:
@@ -37,7 +37,7 @@ module SaucelabsAdapter
 
     def connect_to_rest_api
       sauce_api_url = "https://#{@se_config.saucelabs_username}:#{@se_config.saucelabs_access_key}@saucelabs.com/rest/#{@se_config.saucelabs_username}/"
-      # puts "[saucelabs-adapter] Connecting to Sauce API at #{sauce_api_url}" if ENV['SAUCELABS_ADAPTER_DEBUG']
+      debug "Connecting to Sauce API at #{sauce_api_url}"
       @sauce_api_endpoint = SauceREST::Client.new sauce_api_url
     end
 
