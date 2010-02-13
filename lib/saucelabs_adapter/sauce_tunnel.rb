@@ -71,7 +71,7 @@ module SaucelabsAdapter
         end while tunnel_status != 'running'
       end
     rescue Timeout::Error
-      error_message = "Tunnel did not come up in #{tunnel_startup_timneout} seconds."
+      error_message = "Tunnel did not come up in #{tunnel_startup_timeout} seconds."
       STDERR.puts "[saucelabs-adapter] " + error_message
       shutdown_tunnel_machine
       raise error_message
