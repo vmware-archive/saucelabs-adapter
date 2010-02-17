@@ -5,7 +5,6 @@ module SaucelabsAdapter
     def initialize(configuration_name = nil, selenium_yml_path = nil)
       selenium_yml_path = selenium_yml_path || File.join(RAILS_ROOT, 'config', 'selenium.yml')
       SeleniumConfig.parse_yaml(selenium_yml_path)
-      @start_sauce_tunnel = false
       build_configuration(configuration_name)
     end
 
@@ -15,7 +14,9 @@ module SaucelabsAdapter
 
     [ :selenium_server_address, :selenium_server_port,
       :application_address, :application_port,
-      :saucelabs_username, :saucelabs_access_key, :saucelabs_browser_os, :saucelabs_browser, :saucelabs_browser_version,
+      :saucelabs_username, :saucelabs_access_key,
+      :saucelabs_browser_os, :saucelabs_browser, :saucelabs_browser_version,
+      :saucelabs_max_duration_seconds,
       :tunnel_method, :tunnel_to_localhost_port, :tunnel_startup_timeout ].each do |attr|
       define_method(attr) do
         @configuration[attr.to_s]
@@ -30,6 +31,7 @@ module SaucelabsAdapter
           'os' => saucelabs_browser_os,
           'browser' => saucelabs_browser,
           'browser-version' => saucelabs_browser_version,
+          'max-duration' => saucelabs_max_duration_seconds,
           'job-name' => ENV['SAUCELABS_JOB_NAME'] || Socket.gethostname
         }.to_json
       else
@@ -107,7 +109,8 @@ module SaucelabsAdapter
       errors << require_attributes([:selenium_server_address, :selenium_server_port, :application_port])
       if selenium_server_address == 'saucelabs.com'
         errors << require_attributes([ :saucelabs_username, :saucelabs_access_key,
-                                        :saucelabs_browser_os, :saucelabs_browser, :saucelabs_browser_version ],
+                                        :saucelabs_browser_os, :saucelabs_browser, :saucelabs_browser_version,
+                                        :saucelabs_max_duration_seconds ],
                                       "when selenium_server_address is saucelabs.com")
         case tunnel_method
           when nil, ""

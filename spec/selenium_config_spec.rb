@@ -89,7 +89,8 @@ describe "SeleniumConfig" do
         'access-key'      => "YOUR-SAUCELABS-ACCESS-KEY",
         'os'              => "Linux",
         'browser'         => "firefox",
-        'browser-version' => "3."
+        'browser-version' => "3.",
+        'max-duration'    => 1234
       }.each do |browser_data_key, browser_data_value|
         it "should contain a #{browser_data_key} of #{browser_data_value}" do
           @browser_data[browser_data_key].should == browser_data_value

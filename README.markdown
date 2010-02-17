@@ -3,10 +3,10 @@ Saucelabs-Adapter
 
 Saucelabs-adapter provides the glue to connect Rails Selenium tests to saucelabs.com.
 
-Currently it only supports tests written using Webrat, Polonium and JSUnit.
+Currently it supports tests written using Webrat, Polonium and JSUnit.
 
-Quick Start
------------
+Getting Started - Webrat or Polonium test suites
+------------------------------------------------
 
 1. Prerequisites:
 
@@ -27,7 +27,7 @@ Quick Start
 
 5. If you are not using JsUnit, you can delete the following generated files:
 
-        tests/jsunit/jsunit_test_example.rb
+        test/jsunit/jsunit_test_example.rb
         lib/tasks/jsunit.rake
         jsunit stanzas from config/selenium.yml
 
@@ -41,6 +41,33 @@ Quick Start
 
         rake selenium:sauce
 
+Getting Started - JsUnit test suite
+-----------------------------------
+
+1. Prerequisites:
+
+    Install the latest JsUnit from http://github.com/pivotal/jsunit
+
+    JsUnit must be installed in RAILS_ROOT/public/jsunit as follows:
+
+        public/jsunit/jsunit_jar/jsunit.jar      -- the compiled jar
+        public/jsunit/jsunit/build.xml etc...    -- jsunit sources
+
+2. Install the saucelabs-adapter gem:
+
+        gem install saucelabs-adapter --source gems.pivotallabs.com
+
+3. Run the saucelabs_adapter generator in your project:
+
+        cd your_project
+
+        script/generate saucelabs_adapter
+
+4. Configure it.  In config/selenium.yml, replace YOUR-SAUCELABS-USERNAME and
+   YOUR-SAUCELABS-ACCESS-KEY with your saucelabs.com account information.
+
+5. Run Tests
+
     To run JsUnit tests locally:
 
         rake jsunit:selenium_rc:local
@@ -52,9 +79,8 @@ Quick Start
 What You Should See
 -------------------
 
-When running rake selenium:sauce, intermixed with your test output you should see the following lines:
+When running tests, intermixed with your test output you should see the following lines:
 
-        Loaded suite test/selenium/selenium_suite
         [saucelabs-adapter] Setting up tunnel from Saucelabs (yourhostname-12345.com:80) to localhost:4000
         [saucelabs-adapter] Tunnel ID 717909c571b8319dc5ae708b689fd7f5 for yourhostname-12345.com is up.
         Started
@@ -87,6 +113,9 @@ The saucelabs-adapter performs two functions when it detects you are running a t
 
 CHANGES
 =======
+0.7.6
+-----
+- Added saucelabs_max_duration configuration option.
 
 0.7.0
 -----

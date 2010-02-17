@@ -15,6 +15,7 @@ stanza_saucelabs_firefox_linux_saucetunnel:
   saucelabs_browser_os: "Linux"
   saucelabs_browser: "firefox"
   saucelabs_browser_version: "3."
+  saucelabs_max_duration_seconds: 1234 
   # Browser connects to this host:
   application_address: "this will be ovewritten if tunnel_method == :saucetunnel"
   application_port: 80

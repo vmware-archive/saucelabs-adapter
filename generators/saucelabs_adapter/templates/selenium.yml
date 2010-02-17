@@ -30,6 +30,7 @@ saucelabs: &saucelabs
   saucelabs_browser_os: "Linux"
   saucelabs_browser: "firefox"
   saucelabs_browser_version: "3."
+  saucelabs_max_test_duration: 1800
   # Selenium RC browser connects to and tests the app at this URL:
   application_address: "this will be ovewritten if tunnel_method == :saucetunnel"
   application_port: 80
@@ -38,12 +39,8 @@ saucelabs: &saucelabs
   tunnel_to_localhost_port: 4000
   tunnel_startup_timeout: 240
 
-
-
-saucelabs_jsunit:
+saucelabs_jsunit: &saucelabs_jsunit
   <<: *saucelabs
-  #  application_address: proxy.pivotallabs.com
-  #  application_port: "20000"
   # We are using the Jetty server for Saucelabs JsUnit selenium testing.
   localhost_app_server_port: "8080"
 
@@ -52,21 +49,18 @@ saucelabs_jsunit_firefox:
 
 saucelabs_jsunit_ie:
   <<: *saucelabs_jsunit
-  selenium_browser_key: '{"username": "YOUR-SAUCELABS-USERNAME", "access-key": "YOUR-SAUCELABS-ACCESS-KEY", "os": "Windows 2003", "browser": "iexplore", "browser-version": "7."}'
+  saucelabs_browser_os: "Windows 2003"
+  saucelabs_browser: "iexplore"
+  saucelabs_browser_version: "7."
 
 saucelabs_jsunit_safari:
   <<: *saucelabs_jsunit
-  selenium_browser_key: '{"username": "YOUR-SAUCELABS-USERNAME", "access-key": "YOUR-SAUCELABS-ACCESS-KEY", "os": "Windows 2003", "browser": "safari", "browser-version": "4."}'
+  saucelabs_browser_os: "Windows 2003"
+  saucelabs_browser: "safari"
+  saucelabs_browser_version: "4."
 
 saucelabs_jsunit_chrome:
   <<: *saucelabs_jsunit
-  selenium_browser_key: '{"username": "YOUR-SAUCELABS-USERNAME", "access-key": "YOUR-SAUCELABS-ACCESS-KEY", "os": "Windows 2003", "browser": "googlechrome", "browser-version": ""}'
-
-# This version uses a pivotal reverse tunnel instead of a SauceTunnel
-# See page: https://trac.pivotallabs.com/wiki/PunchingHoles on how to setup the tunnel.
-saucelabs_jsunit_using_pivotal_tunnel:
-  <<: *saucelabs
-  application_address: proxy.pivotallabs.com
-  application_port: "20000"
-  # We are using the Jetty server for Saucelabs JsUnit selenium testing.
-  localhost_app_server_port: "8080"
+  saucelabs_browser_os: "Windows 2003"
+  saucelabs_browser: "googlechrome"
+  saucelabs_browser_version: ""
