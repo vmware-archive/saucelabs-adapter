@@ -31,7 +31,7 @@ module SaucelabsAdapter
           'os' => saucelabs_browser_os,
           'browser' => saucelabs_browser,
           'browser-version' => saucelabs_browser_version,
-          'max-duration' => saucelabs_max_duration_seconds,
+          'max-duration' => saucelabs_max_duration_seconds.to_i,
           'job-name' => ENV['SAUCELABS_JOB_NAME'] || Socket.gethostname
         }.to_json
       else
@@ -88,7 +88,7 @@ module SaucelabsAdapter
     end
 
     def start_sauce_tunnel?
-      tunnel_method == :saucetunnel
+      tunnel_method.to_sym == :saucetunnel
     end
 
     def self.parse_yaml(selenium_yml_path)
@@ -112,7 +112,7 @@ module SaucelabsAdapter
                                         :saucelabs_browser_os, :saucelabs_browser, :saucelabs_browser_version,
                                         :saucelabs_max_duration_seconds ],
                                       "when selenium_server_address is saucelabs.com")
-        case tunnel_method
+        case tunnel_method.to_sym
           when nil, ""
           when :saucetunnel, :othertunnel
             errors << require_attributes([:tunnel_to_localhost_port ],
