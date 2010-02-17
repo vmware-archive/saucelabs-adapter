@@ -25,13 +25,7 @@ Getting Started - Webrat or Polonium test suites
 4. Configure it.  In config/selenium.yml, replace YOUR-SAUCELABS-USERNAME and
    YOUR-SAUCELABS-ACCESS-KEY with your saucelabs.com account information.
 
-5. If you are not using JsUnit, you can delete the following generated files:
-
-        test/jsunit/jsunit_test_example.rb
-        lib/tasks/jsunit.rake
-        jsunit stanzas from config/selenium.yml
-
-6. Run Tests
+5. Run Tests
 
     To run Selenium Test::Unit tests locally:
 
@@ -61,10 +55,18 @@ Getting Started - JsUnit test suite
 
         cd your_project
 
-        script/generate saucelabs_adapter
+        script/generate saucelabs_adapter --jsunit
 
-4. Configure it.  In config/selenium.yml, replace YOUR-SAUCELABS-USERNAME and
-   YOUR-SAUCELABS-ACCESS-KEY with your saucelabs.com account information.
+4. Configure it.
+
+    In config/selenium.yml, replace YOUR-SAUCELABS-USERNAME and
+    YOUR-SAUCELABS-ACCESS-KEY with your saucelabs.com account information.
+
+    Rename RAILS_ROOT/test/jsunit/jsunit_suite_example.rb to RAILS_ROOT/test/jsunit/jsunit_suite.rb
+    and modify it if necessary:
+    test_page needs to be set to the path under /public where your JsUnit test page (suite.html or similar) lives,
+    with '/jsunit' prepended. e.g. if your JsUnit suite runs from RAILS_ROOT/public/javascripts/test-pages/suite.html
+    then test_page needs to be set to '/jsunit/javascripts/test-pages/suite.html'.
 
 5. Run Tests
 
