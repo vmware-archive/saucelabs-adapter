@@ -100,10 +100,9 @@ def run(command)
   puts `#{command}`
 end
 
-desc "Push gem to gems.pivotallabs.com"
+desc "Push gem to gemcutter.org"
 task :deploy => :build do
   gem = `ls pkg/*|tail -1`.strip
   puts "Deploying #{gem}:"
-  run "scp #{gem} gems.pivotallabs.com:gems"
-  run "ssh gems.pivotallabs.com 'gem generate_index --directory=/var/www/nginx-default >> /home/pivotal/gem_generate_index.log 2>&1'"
+  run "gem push #{gem}"
 end
