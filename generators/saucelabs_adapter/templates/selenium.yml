@@ -30,7 +30,7 @@ saucelabs: &saucelabs
   saucelabs_browser_os: "Linux"
   saucelabs_browser: "firefox"
   saucelabs_browser_version: "3."
-  saucelabs_max_test_duration: 1800
+  saucelabs_max_duration_seconds: 1800
   # Selenium RC browser connects to and tests the app at this URL:
   application_address: "this will be ovewritten if tunnel_method == :saucetunnel"
   application_port: 80
