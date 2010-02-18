@@ -14,7 +14,7 @@ Getting Started - Webrat or Polonium test suites
 
 2. Install the gem:
 
-        gem install saucelabs-adapter --source gems.pivotallabs.com
+        gem install saucelabs-adapter
 
 3. Run the saucelabs_adapter generator in your project:
 
@@ -49,7 +49,7 @@ Getting Started - JsUnit test suite
 
 2. Install the saucelabs-adapter gem:
 
-        gem install saucelabs-adapter --source gems.pivotallabs.com
+        gem install saucelabs-adapter
 
 3. Run the saucelabs_adapter generator in your project:
 
@@ -112,6 +112,14 @@ The saucelabs-adapter performs two functions when it detects you are running a t
 1. It sets up a SauceTunnel before the test run starts and tears it down after the test ends.  This happens once for the entire test run.
 
 2. It configures the selenium client to connect to the correct address at saucelabs.com.  This happens at the start of each test.
+
+Resources
+=========
+* [The gem](http://gemcutter.org/gems/saucelabs-adapter)
+* [Source code](http://github.com/pivotal/saucelabs-adapter)
+* [Tracker project](http://www.pivotaltracker.com/projects/59050)
+* [Canary CI build](http://ci.pivotallabs.com:3333/builds/SaucelabsCanary)
+* [Canary project source code](http://github.com/pivotal/saucelabs-canary)
 
 CHANGES
 =======
