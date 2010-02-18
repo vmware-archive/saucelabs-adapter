@@ -36,7 +36,7 @@ saucelabs: &saucelabs
   application_port: 80
   # App host is actually a tunnel that tunnels from <application_address>:<application_port> to localhost:<tunnel_to_localhost_port>
   tunnel_method: :saucetunnel
-  tunnel_to_localhost_port: 4000
+  tunnel_to_localhost_port: 4000 # Warning: application_port and tunnel_to_localhost_port must be identical if you are using Webrat
   tunnel_startup_timeout: 240
 
 saucelabs_jsunit: &saucelabs_jsunit
