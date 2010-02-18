@@ -88,7 +88,7 @@ module SaucelabsAdapter
     end
 
     def start_sauce_tunnel?
-      tunnel_method.to_sym == :saucetunnel
+      !tunnel_method.nil? && tunnel_method.to_sym == :saucetunnel
     end
 
     def self.parse_yaml(selenium_yml_path)
