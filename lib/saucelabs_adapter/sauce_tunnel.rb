@@ -13,11 +13,10 @@ module SaucelabsAdapter
     def initialize(se_config)
       raise "SauceTunnel.new requires a SeleniumConfig argument" unless se_config.is_a?(SeleniumConfig)
       @se_config = se_config
-      connect_to_rest_api
-      start_tunnel
     end
 
     def start_tunnel
+      connect_to_rest_api
       say "Setting up tunnel from Saucelabs (#{@se_config.application_address}:#{@se_config.application_port}) to localhost:#{@se_config.tunnel_to_localhost_port} (timeout #{tunnel_startup_timeout}s)..."
       boot_tunnel_machine
       setup_ssh_reverse_tunnel

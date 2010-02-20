@@ -40,6 +40,7 @@ if defined?(Test)
 
     def setup_tunnel(suite_name)
       @tunnel = SaucelabsAdapter::SauceTunnel.new(@selenium_config)
+      @tunnel.start_tunnel
     end
 
     def teardown_tunnel(suite_name)
