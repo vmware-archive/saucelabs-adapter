@@ -1,5 +1,8 @@
 module SaucelabsAdapter
   class SeleniumConfig
+
+    include Utilities
+
     attr_reader :configuration
 
     def initialize(configuration_name = nil, selenium_yml_path = nil)
@@ -78,12 +81,12 @@ module SaucelabsAdapter
       end
     end
 
-    def create_driver(selenium_args = {}, options = {})
+    def create_driver(selenium_args = {})
       args = selenium_client_driver_args.merge(selenium_args)
-      puts "[saucelabs-adapter] Connecting to Selenium RC server at #{args[:host]}:#{args[:port]} (testing app at #{args[:url]})" if options[:debug]
-      puts "[saucelabs-adapter] args = #{args.inspect}" if options[:debug]
+      debug "Connecting to Selenium RC server at #{args[:host]}:#{args[:port]} (testing app at #{args[:url]})"
+      debug "args = #{args.inspect}"
       driver = ::Selenium::Client::Driver.new(args)
-      puts "[saucelabs-adapter] done" if options[:debug]
+      debug "done"
       driver
     end
 

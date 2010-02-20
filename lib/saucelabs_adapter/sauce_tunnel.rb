@@ -5,6 +5,9 @@ require 'saucerest-ruby/gateway'
 
 module SaucelabsAdapter
   class SauceTunnel
+
+    include Utilities
+
     DEFAULT_TUNNEL_STARTUP_TIMEOUT = 240
 
     def initialize(se_config)
@@ -72,9 +75,9 @@ module SaucelabsAdapter
       end
     rescue Timeout::Error
       error_message = "Tunnel did not come up in #{tunnel_startup_timeout} seconds."
-      STDERR.puts "[saucelabs-adapter] " + error_message
+      say error_message
       shutdown_tunnel_machine
-      raise error_message
+      raise_with_message error_message
     end
 
     def shutdown_tunnel_machine
@@ -91,9 +94,9 @@ module SaucelabsAdapter
       end
     rescue Timeout::Error
       # Do not raise here, or else you give false negatives from test runs
-      STDERR.puts "*" * 80
-      STDERR.puts "Sauce Tunnel failed to shut down! Go visit http://saucelabs.com/tunnels and shut down the tunnel for #{@se_config.application_address}"
-      STDERR.puts "*" * 80
+      say "*" * 80
+      say "Sauce Tunnel failed to shut down! Go visit http://saucelabs.com/tunnels and shut down the tunnel for #{@se_config.application_address}"
+      say "*" * 80
     end
 
     def setup_ssh_reverse_tunnel
@@ -109,14 +112,6 @@ module SaucelabsAdapter
         @gateway.shutdown! if @gateway
         debug "done."
       end
-    end
-
-    def say(what)
-      STDOUT.puts "[saucelabs-adapter] " + what
-    end
-
-    def debug(what)
-      STDOUT.puts "[saucelabs-adapter]   " + what if ENV['SAUCELABS_ADAPTER_DEBUG']
     end
   end
 end

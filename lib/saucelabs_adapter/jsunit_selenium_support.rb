@@ -1,5 +1,6 @@
 module SaucelabsAdapter
   module JsunitSeleniumSupport
+    include Utilities
 
     def requires
       require 'saucelabs_adapter/run_utils'
@@ -8,13 +9,14 @@ module SaucelabsAdapter
     end
 
     def setup_jsunit_selenium(options = {})
+      @diagnostics_prefix = '[JsunitSeleniumSupport]'
       requires
       @selenium_config = SeleniumConfig.new(ENV['SELENIUM_ENV'])
       start_app_server(options)
       @selenium_driver = @selenium_config.create_driver(options)
-      puts "[JsunitSeleniumSupport] calling @selenium_driver.start" if options[:debug]
+      debug "calling @selenium_driver.start"
       @selenium_driver.start
-      puts "[JsunitSeleniumSupport] @selenium_driver.start done"  if options[:debug]
+      debug "@selenium_driver.start done"
     end
 
     def teardown_jsunit_selenium
@@ -24,7 +26,7 @@ module SaucelabsAdapter
 
     def run_jsunit_test(jsunit_params, options = {})
       if $:.detect{ |x| x =~ /Selenium/}
-        raise 'Selenium gem should not be in path! (deprecated in favor of selenium-client, which we require)'
+        raise_with_message 'Selenium gem should not be in path! (deprecated in favor of selenium-client, which we require)'
       end
 
       default_jsunit_params = {
@@ -57,7 +59,7 @@ module SaucelabsAdapter
 
     def start_app_server(options = {})
       stop_app_server
-      puts "[JsunitSeleniumSupport] starting application server:"
+      say "starting application server:"
       app_server_logfile_path = options[:app_server_logfile_path] || "#{RAILS_ROOT}/log/jsunit_jetty_app_server.log"
       RunUtils.run "ant -f #{RAILS_ROOT}/public/javascripts/jsunit/jsunit/build.xml start_server " +
                           "-Dport=#{local_app_server_port} " +
@@ -66,9 +68,9 @@ module SaucelabsAdapter
     end
 
     def stop_app_server
-      raise "oops don't know port app server is running on" unless local_app_server_port
+      raise_with_message "oops don't know port app server is running on" unless local_app_server_port
       while Lsof.running?(local_app_server_port)
-        puts "Killing app server at #{local_app_server_port}..."
+        say "Killing app server at #{local_app_server_port}..."
         Lsof.kill(local_app_server_port)
         sleep 1
       end
@@ -89,7 +91,7 @@ module SaucelabsAdapter
       tests_completed = false
       begin_time = Time.now
       status = ""
-      puts "[JsunitSeleniumSupport] Starting to poll JsUnit..." if options[:verbose]
+      say "Starting to poll JsUnit..." if options[:verbose]
       while (Time.now - begin_time) < options[:jsunit_suite_timeout_seconds] && !tests_completed
         sleep 5
         status = selenium_driver.js_eval("window.mainFrame.mainStatus.document.getElementById('content').innerHTML")
@@ -101,18 +103,18 @@ module SaucelabsAdapter
         run_count = runs.match(/\d+$/)[0].to_i
         fail_count = fails.match(/\d+$/)[0].to_i
         error_count = errors.match(/\d+$/)[0].to_i
-        puts "[JsunitSeleniumSupport] runs/fails/errors: #{run_count}/#{fail_count}/#{error_count} status: #{status}" if options[:verbose]
+        say "runs/fails/errors: #{run_count}/#{fail_count}/#{error_count} status: #{status}" if options[:verbose]
         if status =~ /^Done /
           tests_completed = true
         end
       end
-      raise "[JsunitSeleniumSupport] Tests failed to complete after #{options[:jsunit_suite_timeout_seconds]}, status was '#{status}'" unless tests_completed
+      raise_with_message "Tests failed to complete after #{options[:jsunit_suite_timeout_seconds]}, status was '#{status}'" unless tests_completed
 
-      puts "[JsunitSeleniumSupport] ********** JSUnit tests complete, Runs: #{run_count}, Fails: #{fail_count}, Errors: #{error_count} **********"
+      say "********** JSUnit tests complete, Runs: #{run_count}, Fails: #{fail_count}, Errors: #{error_count} **********"
 
       if (fail_count + error_count > 0)
           error_messages = selenium_driver.js_eval("window.mainFrame.mainErrors.document.getElementsByName('problemsList')[0].innerHTML")
-          puts "[JsunitSeleniumSupport] Error messages: #{error_messages}"
+          say "Error messages: #{error_messages}"
       end
 
       (fail_count + error_count) == 0

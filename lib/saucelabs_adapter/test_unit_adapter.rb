@@ -6,7 +6,7 @@ if defined?(ActiveSupport)
       setup :configure_selenium # 'before_setup' callback from ActiveSupport::TestCase
 
       def configure_selenium
-        puts "[saucelabs-adapter] gem is loading..." if ENV['SAUCELABS_ADAPTER_DEBUG']
+        puts "[saucelabs-adapter] configuring selenium..." if ENV['SAUCELABS_ADAPTER_DEBUG'] && ENV['SAUCELABS_ADAPTER_DEBUG'].to_i >= 2
         selenium_config = SaucelabsAdapter::SeleniumConfig.new(ENV['SELENIUM_ENV'])
         if defined?(Polonium)
           polonium_config = Polonium::Configuration.instance
