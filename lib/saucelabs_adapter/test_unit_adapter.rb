@@ -30,7 +30,7 @@ if defined?(Test)
     def attach_to_mediator_with_sauce_tunnel
       attach_to_mediator_without_sauce_tunnel
       @selenium_config = SaucelabsAdapter::SeleniumConfig.new(ENV['SELENIUM_ENV'])
-      if @selenium_config.start_sauce_tunnel?
+      if @selenium_config.start_tunnel?
         @mediator.add_listener(Test::Unit::UI::TestRunnerMediator::STARTED, &method(:setup_tunnel))
         @mediator.add_listener(Test::Unit::UI::TestRunnerMediator::FINISHED, &method(:teardown_tunnel))
       end
@@ -39,7 +39,7 @@ if defined?(Test)
     alias_method_chain :attach_to_mediator, :sauce_tunnel unless private_method_defined?(:attach_to_mediator_without_sauce_tunnel)
 
     def setup_tunnel(suite_name)
-      @tunnel = SaucelabsAdapter::SauceTunnel.new(@selenium_config)
+      @tunnel = SaucelabsAdapter::Tunnel.factory(@selenium_config)
       @tunnel.start_tunnel
     end
 

@@ -20,7 +20,9 @@ module SaucelabsAdapter
       :saucelabs_username, :saucelabs_access_key,
       :saucelabs_browser_os, :saucelabs_browser, :saucelabs_browser_version,
       :saucelabs_max_duration_seconds,
-      :tunnel_method, :tunnel_to_localhost_port, :tunnel_startup_timeout ].each do |attr|
+      :tunnel_method, :tunnel_to_localhost_port, :tunnel_startup_timeout,
+      :tunnel_username, :tunnel_password, :tunnel_keyfile,
+      :jsunit_polling_interval_seconds ].each do |attr|
       define_method(attr) do
         @configuration[attr.to_s]
       end
@@ -43,7 +45,7 @@ module SaucelabsAdapter
     end
 
     def application_address
-      if start_sauce_tunnel?
+      if start_tunnel? && @configuration['tunnel_method'].to_sym == :saucetunnel
         # We are using Sauce Labs and Sauce Tunnel.
         # We need to use a masquerade hostname on the EC2 end of the tunnel that will be unique within the scope of
         # this account (e.g. pivotallabs).  Therefore we mint a fairly unique hostname here.
@@ -90,8 +92,8 @@ module SaucelabsAdapter
       driver
     end
 
-    def start_sauce_tunnel?
-      !tunnel_method.nil? && tunnel_method.to_sym == :saucetunnel
+    def start_tunnel?
+      !tunnel_method.nil? && tunnel_method.to_sym != :othertunnel
     end
 
     def self.parse_yaml(selenium_yml_path)
@@ -114,18 +116,26 @@ module SaucelabsAdapter
         errors << require_attributes([ :saucelabs_username, :saucelabs_access_key,
                                         :saucelabs_browser_os, :saucelabs_browser, :saucelabs_browser_version,
                                         :saucelabs_max_duration_seconds ],
-                                      "when selenium_server_address is saucelabs.com")
-        case tunnel_method.to_sym
-          when nil, ""
-          when :saucetunnel, :othertunnel
-            errors << require_attributes([:tunnel_to_localhost_port ],
-                                          "if tunnel_method is set")
-          else
-            errors << "Unknown tunnel_method: #{tunnel_method}"
+                                      :when => "when selenium_server_address is saucelabs.com")
+        if tunnel_method
+          errors << require_attributes([:tunnel_to_localhost_port ], :when => "if tunnel_method is set")
+          case tunnel_method.to_sym
+            when nil, ""
+            when :saucetunnel
+            when :othertunnel
+              errors << require_attributes([:application_address], :when => "when tunnel_method is :othertunnel")
+            when :sshtunnel
+              errors << require_attributes([:application_address], :when => "when tunnel_method is :sshtunnel")
+              errors << require_attributes([:tunnel_password, :tunnel_keyfile],
+                                           :when => "when tunnel_method is :sshtunnel",
+                                           :any_or_all => :any)
+            else
+              errors << "Unknown tunnel_method: #{tunnel_method}"
+          end
         end
       else
         errors << require_attributes([:selenium_browser_key, :application_address ],
-                                      "unless server is saucelab.com")
+                                      :when => "unless server is saucelab.com")
       end
 
       errors.flatten!.compact!
@@ -134,11 +144,17 @@ module SaucelabsAdapter
       end
     end
 
-    def require_attributes(names, under_what_circumstances = "")
+    def require_attributes(names, options = {})
+      default_options = {
+        :when => "",
+        :any_or_all => :all
+      }
+      options.reverse_merge!(default_options)
       errors = []
       names.each do |attribute|
-        errors << "#{attribute} is required #{under_what_circumstances}" if send(attribute).nil?
+        errors << "#{attribute} is required #{options[:when]}" if send(attribute).nil?
       end
+      errors = [] if options[:any_or_all] == :any && errors.size < names.size
       errors
     end
 

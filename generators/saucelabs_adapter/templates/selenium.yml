@@ -32,12 +32,23 @@ saucelabs: &saucelabs
   saucelabs_browser_version: "3."
   saucelabs_max_duration_seconds: 1800
   # Selenium RC browser connects to and tests the app at this URL:
-  application_address: "this will be ovewritten if tunnel_method == :saucetunnel"
+  application_address: "testhost.com" # this will be ovewritten if tunnel_method == :saucetunnel
   application_port: 80
-  # App host is actually a tunnel that tunnels from <application_address>:<application_port> to localhost:<tunnel_to_localhost_port>
-  tunnel_method: :saucetunnel
-  tunnel_to_localhost_port: 4000 # Warning: application_port and tunnel_to_localhost_port must be identical if you are using Webrat
-  tunnel_startup_timeout: 240
+  # App host can actually be a tunnel that tunnels from <application_address>:<application_port> to localhost:<tunnel_to_localhost_port>
+  # There are 3 kinds of tunnels:
+  #
+  # tunnel_method: :saucetunnel
+  # tunnel_to_localhost_port: 4000 # Warning: application_port and tunnel_to_localhost_port must be identical if you are using Webrat
+  # tunnel_startup_timeout: 240
+  #
+  # tunnel_method: :sshtunnel
+  # application_address: proxy.mycompany.com
+  # application_port: 12345
+  # tunnel_to_localhost_port: 4000 # Warning: application_port and tunnel_to_localhost_port must be identical if you are using Webrat
+  # tunnel_username: fred
+  # tunnel_keyfile: "/path/to/keyfile"  # or tunnel_password: "password"
+  #
+  # tunnel_method: :othertunnel        You're managing your tunnel independently
 
 saucelabs_jsunit: &saucelabs_jsunit
   <<: *saucelabs
@@ -52,6 +63,7 @@ saucelabs_jsunit_ie:
   saucelabs_browser_os: "Windows 2003"
   saucelabs_browser: "iexplore"
   saucelabs_browser_version: "7."
+  jsunit_polling_interval_seconds: 300
 
 saucelabs_jsunit_safari:
   <<: *saucelabs_jsunit

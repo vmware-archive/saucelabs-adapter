@@ -1,7 +1,10 @@
 require 'rubygems'
-require 'active_support/core_ext/object' # for .blank?
+require 'active_support'
+# Don't pull in the entire saucelabs-adapter otherwise it will complain about: undefined method `setup' for ActiveSupport::TestCase:Class
+# Apparently this is added from outside
+require 'saucelabs_adapter/utilities'
+require 'saucelabs_adapter/selenium_config'
 
-require File.join(File.dirname(__FILE__), '..', 'lib', 'saucelabs_adapter')
 SELENIUM_YML_FIXTURE_FILE = File.join(File.dirname(__FILE__), 'fixtures', 'selenium.yml')
 
 # Doing this to capture args because I seriously doubt we can mock out .new()
@@ -23,9 +26,9 @@ describe "SeleniumConfig" do
       @selenium_config = SaucelabsAdapter::SeleniumConfig.new('local', SELENIUM_YML_FIXTURE_FILE)
     end
 
-    describe "#start_sauce_tunnel?" do
+    describe "#start_tunnel?" do
       it "should return false" do
-        @selenium_config.start_sauce_tunnel?.should be_false
+        @selenium_config.start_tunnel?.should be_false
       end
     end
 
@@ -73,9 +76,9 @@ describe "SeleniumConfig" do
       @selenium_config = SaucelabsAdapter::SeleniumConfig.new('stanza_saucelabs_firefox_linux_saucetunnel', SELENIUM_YML_FIXTURE_FILE)
     end
 
-    describe "#start_sauce_tunnel?" do
+    describe "#start_tunnel?" do
       it "should return true" do
-        @selenium_config.start_sauce_tunnel?.should be_true
+        @selenium_config.start_tunnel?.should be_true
       end
     end
 

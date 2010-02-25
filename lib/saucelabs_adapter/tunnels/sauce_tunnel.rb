@@ -4,16 +4,11 @@ require 'saucerest-ruby/saucerest'
 require 'saucerest-ruby/gateway'
 
 module SaucelabsAdapter
-  class SauceTunnel
+  class SauceTunnel < Tunnel
 
     include Utilities
 
     DEFAULT_TUNNEL_STARTUP_TIMEOUT = 240
-
-    def initialize(se_config)
-      raise "SauceTunnel.new requires a SeleniumConfig argument" unless se_config.is_a?(SeleniumConfig)
-      @se_config = se_config
-    end
 
     def start_tunnel
       connect_to_rest_api

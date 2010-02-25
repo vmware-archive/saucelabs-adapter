@@ -121,8 +121,13 @@ Resources
 * [Canary CI build](http://ci.pivotallabs.com:3333/builds/SaucelabsCanary)
 * [Canary project source code](http://github.com/pivotal/saucelabs-canary)
 
-CHANGES
-=======
+NOTABLE CHANGES
+===============
+0.8
+---
+- Added new tunnel type SshTunnel (a generic reverse SSH tunnel), see selenium.yml for now to configure.
+- Added jsunit_polling_interval_seconds configuratin option.
+
 0.7.6
 -----
 - Added saucelabs_max_duration configuration option.

@@ -39,6 +39,7 @@ module SaucelabsAdapter
       jsunit_params.reverse_merge!(default_jsunit_params)
 
       test_url = "/jsunit/javascripts/jsunit/jsunit/testRunner.html?" + jsunit_params.map { |k,v| "#{k}=#{v}" }.join("&")
+      options.reverse_merge!(:polling_interval => @selenium_config.jsunit_polling_interval_seconds) if @selenium_config.jsunit_polling_interval_seconds
       run_suite(@selenium_driver, test_url, options)
     end
 
@@ -78,7 +79,8 @@ module SaucelabsAdapter
 
     def run_suite(selenium_driver, suite_path, options = {})
       default_options = {
-        :timeout_in_seconds => 1200
+        :timeout_in_seconds => 1200,
+        :polling_interval => 5
       }
       options.reverse_merge!(default_options)
 
@@ -91,9 +93,10 @@ module SaucelabsAdapter
       tests_completed = false
       begin_time = Time.now
       status = ""
-      say "Starting to poll JsUnit..." if options[:verbose]
+      say "Starting to poll JsUnit (every #{options[:polling_interval]}s)..." if options[:verbose]
       while (Time.now - begin_time) < options[:jsunit_suite_timeout_seconds] && !tests_completed
-        sleep 5
+        sleep options[:polling_interval]
+        debug "polling now...", 2
         status = selenium_driver.js_eval("window.mainFrame.mainStatus.document.getElementById('content').innerHTML")
         status.gsub!(/^<[bB]>Status:<\/[bB]> /, '')
         # Long form: window.frames['mainFrame'].frames['mainCounts'].frames['mainCountsRuns'].document.getElementById('content').innerHTML
