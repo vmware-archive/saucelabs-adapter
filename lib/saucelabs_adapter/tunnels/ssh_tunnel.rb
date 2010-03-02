@@ -14,18 +14,9 @@ module SaucelabsAdapter
     end
 
     def shutdown
-      if @gateway
-        say "Shutting down ssh reverse tunnel"
-        begin
-          @gateway.close(@port) if @port
-          @gateway.shutdown! if @gateway
-        rescue => e
-          say "Error shutting down ssh reverse tunnel: #{e.message}"
-          say e.backtrace
-          # Do not raise an error if tunnel shutdown failed; we don't want to abort the whole test suite; and it is all in transient memory anyway
-          # This could potentially be a problem when opening an SshTunnel multiple times during a single interpreter, but we'll see...
-        end
-      end
+      return
+      # just return; tunnel is all in transient memory, and we don't want to hang or abort the whole test suite anyway
+      # This could potentially be a problem when opening an SshTunnel multiple times during a single interpreter, but we'll see...
     end
 
   end
