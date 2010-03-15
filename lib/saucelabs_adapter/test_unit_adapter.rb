@@ -1,4 +1,4 @@
-if defined?(ActiveSupport)
+if defined?(ActiveSupport::TestCase) && ActiveSupport::TestCase.respond_to?(:setup)
   puts "[saucelabs-adapter] Inserting ActiveSupport::TestCase before_setup :configure_selenium hook" if ENV['SAUCELABS_ADAPTER_DEBUG']
 
   module ::ActiveSupport
@@ -20,7 +20,7 @@ if defined?(ActiveSupport)
   end
 end
 
-if defined?(Test)
+if defined?(Test::Unit::UI::Console::TestRunner)
   puts "[saucelabs-adapter] Inserting Test::Unit::UI::Console::TestRunner attach_to_mediator tunnel start hook" if ENV['SAUCELABS_ADAPTER_DEBUG']
 
   class Test::Unit::UI::Console::TestRunner
