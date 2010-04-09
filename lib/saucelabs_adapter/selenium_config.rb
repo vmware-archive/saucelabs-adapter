@@ -129,6 +129,9 @@ module SaucelabsAdapter
               errors << require_attributes([:tunnel_password, :tunnel_keyfile],
                                            :when => "when tunnel_method is :sshtunnel",
                                            :any_or_all => :any)
+              if tunnel_keyfile && !File.exist?(File.expand_path(tunnel_keyfile))
+                errors << "tunnel_keyfile '#{tunnel_keyfile}' does not exist" 
+              end
             else
               errors << "Unknown tunnel_method: #{tunnel_method}"
           end
