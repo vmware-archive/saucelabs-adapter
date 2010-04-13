@@ -152,7 +152,8 @@ module SaucelabsAdapter
         :when => "",
         :any_or_all => :all
       }
-      options.reverse_merge!(default_options)
+      options = default_options.merge(options)
+
       errors = []
       names.each do |attribute|
         errors << "#{attribute} is required #{options[:when]}" if send(attribute).nil?

@@ -36,10 +36,12 @@ module SaucelabsAdapter
         :pageLoadTimeout => "60",
         :suppressCacheBuster => (@selenium_config.selenium_server_address == 'saucelabs.com').to_s
       }
-      jsunit_params.reverse_merge!(default_jsunit_params)
+      jsunit_params = default_jsunit_params.merge(jsunit_params)
 
       test_url = "/jsunit/javascripts/jsunit/jsunit/testRunner.html?" + jsunit_params.map { |k,v| "#{k}=#{v}" }.join("&")
-      options.reverse_merge!(:polling_interval => @selenium_config.jsunit_polling_interval_seconds) if @selenium_config.jsunit_polling_interval_seconds
+      if @selenium_config.jsunit_polling_interval_seconds
+        options = {:polling_interval => @selenium_config.jsunit_polling_interval_seconds}.merge(options)
+      end
       run_suite(@selenium_driver, test_url, options)
     end
 
@@ -82,7 +84,7 @@ module SaucelabsAdapter
         :timeout_in_seconds => 1200,
         :polling_interval => 5
       }
-      options.reverse_merge!(default_options)
+      options = default_options.merge(options)
 
       selenium_driver.open(suite_path)
 

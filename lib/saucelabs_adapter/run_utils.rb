@@ -3,7 +3,7 @@ class RunUtils
     default_options = {
       :raise_on_fail => true
     }
-    options.reverse_merge!(default_options)
+    options = default_options.merge(options)
     puts "Executing: #{command}"
     success = system(command)
     if !success && options[:raise_on_fail]
