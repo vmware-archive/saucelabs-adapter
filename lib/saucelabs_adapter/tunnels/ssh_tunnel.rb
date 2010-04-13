@@ -17,7 +17,11 @@ module SaucelabsAdapter
       return
       # just return; tunnel is all in transient memory, and we don't want to hang or abort the whole test suite anyway
       # This could potentially be a problem when opening an SshTunnel multiple times during a single interpreter, but we'll see...
+      # if @gateway
+      #   say "Shutting down ssh reverse tunnel"
+      #   @gateway.close(@port) if @port
+      #   @gateway.shutdown! if @gateway
+      # end
     end
-
   end
 end
