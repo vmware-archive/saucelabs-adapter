@@ -15,7 +15,8 @@ module SaucelabsAdapter
       @configuration[attribute.to_s] = value
     end
 
-    [ :selenium_server_address, :selenium_server_port,
+    [ :test_framework,
+      :selenium_server_address, :selenium_server_port,
       :application_address, :application_port,
       :saucelabs_username, :saucelabs_access_key,
       :saucelabs_browser_os, :saucelabs_browser, :saucelabs_browser_version,
@@ -106,6 +107,11 @@ module SaucelabsAdapter
     def build_configuration(configuration_name)
       @configuration = @@selenium_configs[configuration_name]
       raise "[saucelabs-adapter] stanza '#{configuration_name}' not found in #{@selenium_yml}" unless @configuration
+      # If the Saucelabs-Adapter picked a port out of a range during this session, use it.
+      if ENV['SAUCELABS_ADAPTER_APPLICATION_PORT']
+        @configuration['application_port'] = ENV['SAUCELABS_ADAPTER_APPLICATION_PORT'].to_i
+        debug("Using application port #{application_port} from environment variable SAUCELABS_ADAPTER_APPLICATION_PORT", 2)
+      end
       check_configuration(configuration_name)
     end
 
@@ -129,6 +135,14 @@ module SaucelabsAdapter
               errors << require_attributes([:tunnel_password, :tunnel_keyfile],
                                            :when => "when tunnel_method is :sshtunnel",
                                            :any_or_all => :any)
+              if application_address && application_port.is_a?(String) && application_port =~ /(\d+)-(\d+)/
+                # We have been given a port range. Find an unused one.
+                port = find_unused_port(application_address, ($1.to_i)..($2.to_i))
+                @configuration['application_port'] = port
+                @configuration['tunnel_to_localhost_port'] = port if test_framework == :webrat
+                # Pass this calculated value on to any other instances of SeleniumConfig created
+                ENV['SAUCELABS_ADAPTER_APPLICATION_PORT'] = port.to_s
+              end
               if tunnel_keyfile && !File.exist?(File.expand_path(tunnel_keyfile))
                 errors << "tunnel_keyfile '#{tunnel_keyfile}' does not exist" 
               end

@@ -21,6 +21,7 @@ local_jsunit:
 #                       "googlechrome"      ""
 # "Linux"               "firefox"           "3."
 saucelabs: &saucelabs
+  test_framework: webrat
   # URL of Selenium RC server:
   selenium_server_address: "saucelabs.com"
   selenium_server_port: "4444"
@@ -43,7 +44,7 @@ saucelabs: &saucelabs
   #
   # tunnel_method: :sshtunnel
   # application_address: proxy.mycompany.com
-  # application_port: 12345
+  # application_port: 12345 # or can be a range XXXX-YYYY
   # tunnel_to_localhost_port: 4000 # Warning: application_port and tunnel_to_localhost_port must be identical if you are using Webrat
   # tunnel_username: fred
   # tunnel_keyfile: "/path/to/keyfile"  # or tunnel_password: "password"

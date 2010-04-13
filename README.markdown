@@ -123,6 +123,12 @@ Resources
 
 NOTABLE CHANGES
 ===============
+
+0.8.5
+-----
+- Allow application_port to be a range of form: XXXX-YYYY, e.g. 4000-5000.  The SaucelabsAdapter will find an unused port in that range.
+- Allow specification of the test framework in use.  If test_framework == :webrat and tunnel_mode == :sshtunnel, the generated unused port will also be written to tunnel_to_localhost_port
+
 0.8
 ---
 - Added new tunnel type SshTunnel (a generic reverse SSH tunnel), see selenium.yml for now to configure.
