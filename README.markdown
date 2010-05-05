@@ -124,6 +124,10 @@ Resources
 NOTABLE CHANGES
 ===============
 
+0.8.6
+-----
+- No longer exits when the tunnel status is 'deploying'
+
 0.8.5
 -----
 - Allow application_port to be a range of form: XXXX-YYYY, e.g. 4000-5000.  The SaucelabsAdapter will find an unused port in that range.

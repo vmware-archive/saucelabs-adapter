@@ -56,7 +56,7 @@ module SaucelabsAdapter
           debug "  tunnel host is #{tunnel_status}" if tunnel_status != last_status
           last_status = tunnel_status
           case tunnel_status
-            when 'new', 'booting'
+            when 'new', 'booting', 'deploying'
               # Alrighty. Keep going.
             when 'running'
               # We're done.
