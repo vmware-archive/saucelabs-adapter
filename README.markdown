@@ -124,7 +124,7 @@ Resources
 NOTABLE CHANGES
 ===============
 
-0.8.6
+0.8.7
 -----
 - No longer exits when the tunnel status is 'deploying'
 
