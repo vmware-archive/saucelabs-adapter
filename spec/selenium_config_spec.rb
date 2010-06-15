@@ -1,9 +1,9 @@
-require 'rubygems'
-require 'active_support'
+require File.join(File.dirname(__FILE__), 'spec_helper')
 # Don't pull in the entire saucelabs-adapter otherwise it will complain about: undefined method `setup' for ActiveSupport::TestCase:Class
 # Apparently this is added from outside
 require 'saucelabs_adapter/utilities'
 require 'saucelabs_adapter/selenium_config'
+require 'json'
 
 SELENIUM_YML_FIXTURE_FILE = File.join(File.dirname(__FILE__), 'fixtures', 'selenium.yml')
 
@@ -102,6 +102,20 @@ describe "SeleniumConfig" do
 
       it "should contain a job_name of our hostname" do
         @browser_data['job-name'].should == Socket.gethostname
+      end
+
+      describe "#display_safely" do
+        it "should mask all but the first 5 characters of :browser=>access-key" do
+          private_key = "abcdefgh-ijkl-mnop-qrst-uvwxyz0123456"
+          @browser_data['otherkey'] = 'foo'
+          @browser_data['access-key'] = private_key
+          hash_with_browser_json = {:browser => @browser_data.to_json}
+          display_string = @selenium_config.send(:display_safely, hash_with_browser_json)
+
+          display_string.should match(/access-key.*:.*abcde\.\.\./)
+          display_string.should_not match(/"#{private_key}/)
+          display_string.should match(/otherkey.*:.*foo/)
+        end
       end
     end
 

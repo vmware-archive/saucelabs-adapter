@@ -86,8 +86,8 @@ module SaucelabsAdapter
 
     def create_driver(selenium_args = {})
       args = selenium_client_driver_args.merge(selenium_args)
-      debug "Connecting to Selenium RC server at #{args[:host]}:#{args[:port]} (testing app at #{args[:url]})"
-      debug "args = #{args.inspect}"
+      say "Connecting to Selenium RC server at #{args[:host]}:#{args[:port]} (testing app at #{args[:url]})"
+      say "args = #{display_safely(args)}"
       driver = ::Selenium::Client::Driver.new(args)
       debug "done"
       driver
@@ -103,6 +103,14 @@ module SaucelabsAdapter
     end
 
     private
+
+    def display_safely(selenium_args)
+      safe = selenium_args.dup
+      safe[:browser] = JSON.parse( safe[:browser])
+      safe[:browser]['access-key'] = safe[:browser]['access-key'][0..4] + '...'
+      safe[:browser] = safe[:browser].to_json
+      safe.inspect
+    end
 
     def build_configuration(configuration_name)
       @configuration = @@selenium_configs[configuration_name]

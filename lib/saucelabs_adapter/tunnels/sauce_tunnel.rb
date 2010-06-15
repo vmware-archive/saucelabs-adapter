@@ -2,6 +2,8 @@ require 'net/ssh'
 require 'net/ssh/gateway'
 require 'saucerest-ruby/saucerest'
 require 'saucerest-ruby/gateway'
+require 'saucelabs_adapter/run_utils'
+
 
 module SaucelabsAdapter
   class SauceTunnel < Tunnel
@@ -95,6 +97,7 @@ module SaucelabsAdapter
 
     def setup_ssh_reverse_tunnel
       debug "Starting ssh reverse tunnel"
+      RunUtils.run("sed -i.backup -e '/#{Regexp.escape(@tunnel_info['Host'])}/d' #{ENV['HOME']}/.ssh/known_hosts", :raise_on_fail => false)
       @gateway = Net::SSH::Gateway.new(@tunnel_info['Host'], @se_config.saucelabs_username, {:password => @se_config.saucelabs_access_key})
       @port = @gateway.open_remote(@se_config.tunnel_to_localhost_port.to_i, "127.0.0.1", @se_config.application_port.to_i, "0.0.0.0")
     end
