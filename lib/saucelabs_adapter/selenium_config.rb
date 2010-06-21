@@ -99,7 +99,10 @@ module SaucelabsAdapter
 
     def self.parse_yaml(selenium_yml_path)
       raise "[saucelabs-adapter] could not open #{selenium_yml_path}" unless File.exist?(selenium_yml_path)
-      @@selenium_configs ||= YAML.load_file(selenium_yml_path)
+      file_contents = File.open(selenium_yml_path).read
+      erb_parsed_file_contents = ERB.new(%{#{file_contents}}).result
+      configs = YAML.load(erb_parsed_file_contents)
+      @@selenium_configs ||= configs
     end
 
     private

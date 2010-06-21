@@ -26,6 +26,13 @@ describe "SeleniumConfig" do
       @selenium_config = SaucelabsAdapter::SeleniumConfig.new('local', SELENIUM_YML_FIXTURE_FILE)
     end
 
+    describe "#tunnel_keyfile" do
+      it "should parse erb" do
+        expected_value = "/path/with/erb/#{ENV['USER']}"
+        @selenium_config.tunnel_keyfile.should == expected_value
+      end
+    end
+
     describe "#start_tunnel?" do
       it "should return false" do
         @selenium_config.start_tunnel?.should be_false

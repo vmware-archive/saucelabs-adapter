@@ -47,7 +47,7 @@ saucelabs: &saucelabs
   # application_port: 12345 # or can be a range XXXX-YYYY
   # tunnel_to_localhost_port: 4000 # Warning: application_port and tunnel_to_localhost_port must be identical if you are using Webrat
   # tunnel_username: fred
-  # tunnel_keyfile: "/path/to/keyfile"  # or tunnel_password: "password"
+  # tunnel_keyfile: "/Users/<%= ENV['USER'] %>/.ssh/id_rsa"  # or tunnel_password: "password"
   #
   # tunnel_method: :othertunnel        You're managing your tunnel independently
 

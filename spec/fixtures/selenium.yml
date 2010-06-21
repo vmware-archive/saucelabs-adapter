@@ -4,6 +4,7 @@ local:
   selenium_browser_key: "*chrome /Applications/Firefox.app/Contents/MacOS/firefox-bin"
   application_address: "127.0.0.1"
   application_port: 4000
+  tunnel_keyfile: "/path/with/erb/<%= ENV['USER'] %>"
 
 stanza_saucelabs_firefox_linux_saucetunnel:
   # Selenium RC server
@@ -23,6 +24,7 @@ stanza_saucelabs_firefox_linux_saucetunnel:
   tunnel_method: :saucetunnel
   tunnel_to_localhost_port: 4000
   tunnel_startup_timeout: 240
+  tunnel_keyfile: "/path/with/erb/<%= ENV['USER'] %>"
 
 
 

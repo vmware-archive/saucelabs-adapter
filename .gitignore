@@ -23,3 +23,6 @@ pkg
 
 ## PROJECT::SPECIFIC
 saucelabs-adapter.gemspec
+
+.rvmrc
+.bundle

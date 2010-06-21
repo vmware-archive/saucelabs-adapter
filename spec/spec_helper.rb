@@ -1,4 +1,7 @@
-require 'rubygems'
+require "rubygems"
+require "bundler"
+Bundler.setup
+Bundler.require :default
 require 'active_support'
 require 'spec'
 require "spec/autorun"
