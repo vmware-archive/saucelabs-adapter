@@ -48,7 +48,9 @@ begin
      "lib/saucerest-python/sshtunnel.py",
      "lib/tasks/jsunit.rake",
      "generators/saucelabs_adapter/saucelabs_adapter_generator.rb",
+     "generators/saucelabs_adapter/templates/sample_webrat_test.rb",
      "generators/saucelabs_adapter/templates/selenium.yml",
+     "generators/saucelabs_adapter/templates/selenium_suite.rb",
      "generators/saucelabs_adapter/templates/saucelabs_adapter.rake",
      "generators/saucelabs_adapter/templates/jsunit.rake",
      "generators/saucelabs_adapter/templates/jsunit_suite_example.rb"

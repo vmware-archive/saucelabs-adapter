@@ -25,6 +25,9 @@ class SaucelabsAdapterGenerator < Rails::Generator::Base
       m.directory 'lib/tasks'
       m.file      'saucelabs_adapter.rake',        'lib/tasks/saucelabs_adapter.rake'
       m.file      'selenium.yml',                  'config/selenium.yml'
+      m.directory 'test/selenium'
+      m.file      'sample_webrat_test.rb',         'test/selenium/sample_webrat_test.rb'
+      m.file      'selenium_suite.rb',             'test/selenium/selenium_suite.rb'
       if options[:jsunit]
         m.file      'jsunit.rake',                   'lib/tasks/jsunit.rake'
         m.directory 'test/jsunit'
