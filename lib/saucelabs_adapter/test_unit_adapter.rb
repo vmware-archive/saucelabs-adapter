@@ -24,6 +24,7 @@ if defined?(Test::Unit::UI::Console::TestRunner)
   puts "[saucelabs-adapter] Inserting Test::Unit::UI::Console::TestRunner attach_to_mediator tunnel start hook" if ENV['SAUCELABS_ADAPTER_DEBUG']
 
   class Test::Unit::UI::Console::TestRunner
+    include SaucelabsAdapter::Utilities
 
     private
 
@@ -33,6 +34,9 @@ if defined?(Test::Unit::UI::Console::TestRunner)
       if @selenium_config.start_tunnel?
         @mediator.add_listener(Test::Unit::UI::TestRunnerMediator::STARTED, &method(:setup_tunnel))
         @mediator.add_listener(Test::Unit::UI::TestRunnerMediator::FINISHED, &method(:teardown_tunnel))
+      end
+      if @selenium_config.kill_mongrel_after_suite?
+        @mediator.add_listener(Test::Unit::UI::TestRunnerMediator::FINISHED, &method(:kill_mongrel_if_needed))
       end
     end
 
@@ -45,6 +49,18 @@ if defined?(Test::Unit::UI::Console::TestRunner)
 
     def teardown_tunnel(suite_name)
       @tunnel.shutdown
+    end
+
+    def kill_mongrel_if_needed(suite_name)
+      mongrel_pid_file = File.join(RAILS_ROOT, "tmp", "pids", "mongrel_selenium.pid")
+      if File.exists?(mongrel_pid_file)
+        pid = File.read(mongrel_pid_file).to_i
+        say "Killing mongrel at #{pid}"
+        Process.kill("KILL", pid)
+      end
+      if File.exists?(mongrel_pid_file)
+        FileUtils.rm(mongrel_pid_file)
+      end
     end
   end
 end

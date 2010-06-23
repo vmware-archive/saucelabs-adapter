@@ -23,7 +23,7 @@ module SaucelabsAdapter
       :saucelabs_max_duration_seconds,
       :tunnel_method, :tunnel_to_localhost_port, :tunnel_startup_timeout,
       :tunnel_username, :tunnel_password, :tunnel_keyfile,
-      :jsunit_polling_interval_seconds ].each do |attr|
+      :jsunit_polling_interval_seconds, :kill_mongrel_after_suite ].each do |attr|
       define_method(attr) do
         @configuration[attr.to_s]
       end
@@ -95,6 +95,11 @@ module SaucelabsAdapter
 
     def start_tunnel?
       !tunnel_method.nil? && tunnel_method.to_sym != :othertunnel
+    end
+
+    def kill_mongrel_after_suite?
+      return true if kill_mongrel_after_suite.nil?
+      kill_mongrel_after_suite.to_s == 'true'
     end
 
     def self.parse_yaml(selenium_yml_path)
