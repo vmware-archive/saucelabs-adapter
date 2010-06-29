@@ -48,7 +48,7 @@ saucelabs: &saucelabs
   # tunnel_to_localhost_port: 4000 # Warning: application_port and tunnel_to_localhost_port must be identical if you are using Webrat
   # tunnel_startup_timeout: 240
   #
-  # tunnel_method: :sshtunnel
+  # tunnel_method: :sshtunnel # WARNING: if other projects use the same port on the same machine at the same time, you can get intermittent errors.
   # application_address: proxy.mycompany.com
   # application_port: 12345 # or can be a range XXXX-YYYY
   # tunnel_to_localhost_port: 4000 # Warning: application_port and tunnel_to_localhost_port must be identical if you are using Webrat
