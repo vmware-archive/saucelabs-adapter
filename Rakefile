@@ -56,7 +56,7 @@ begin
      "generators/saucelabs_adapter/templates/jsunit.rake",
      "generators/saucelabs_adapter/templates/jsunit_suite_example.rb"
   ]
-    gem.add_dependency 'rest-client', '>= 1.2.0'
+    gem.add_dependency 'rest-client', '>= 1.5.0'
     gem.add_dependency 'net-ssh', '>= 2.0.12'
     gem.add_dependency 'net-ssh-gateway', '>= 1.0.1'
     gem.add_dependency 'selenium-client', '>= 1.2.17'
