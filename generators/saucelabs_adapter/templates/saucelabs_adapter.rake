@@ -10,7 +10,10 @@ namespace :selenium do
 
   # Rake tasks are cumulative, and some old plugins are still defining selenium:server, so clear it.
   Rake::Task[:'selenium:server'].clear_actions if Rake::Task.exists?('selenium:server')
-  
+
+  desc "Run both test/unit and rspec tests, at saucelabs.com"
+  task :ci  => [:sauce, :'spec:sauce']
+
   desc "Run the selenium remote-control server"
   task :server do
     system('selenium-rc')
@@ -18,7 +21,7 @@ namespace :selenium do
 
   desc "Run the selenium remote-control server in the background"
   task :server_bg do
-    system('nohup selenium-rc 2&>1 &')
+    system('nohup selenium-rc 2>&1 &')
   end
 
   desc "Runs Selenium tests locally (selenium server must already be started)"
@@ -48,6 +51,19 @@ namespace :selenium do
     else
       puts "test/selenium/selenium_suite.rb not found, bailing.\nPlease create a script that will run your selenium tests."
       exit 1
+    end
+  end
+
+  namespace :spec do
+    desc "Runs Selenium tests locally (selenium server must already be started)"
+    task :local => [:local_env, :suite]
+
+    desc "Run Selenium tests at saucelabs.com (using configuration 'saucelabs' in config/selenium.yml)"
+    task :sauce => [:sauce_env, :suite]
+
+    task :suite do
+      require 'saucelabs-adapter'
+      Rake::Task['spec:integration'].invoke
     end
   end
 end
