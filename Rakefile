@@ -39,6 +39,7 @@ begin
      "lib/saucelabs_adapter/tunnels/other_tunnel.rb",
      "lib/saucelabs_adapter/selenium_config.rb",
      "lib/saucelabs_adapter/test_unit_adapter.rb",
+     "lib/saucelabs_adapter/rspec_adapter.rb",
      "lib/saucelabs_adapter/jsunit_selenium_support.rb",
      "lib/saucerest-ruby/saucerest.rb",
      "lib/saucerest-ruby/gateway.rb",
