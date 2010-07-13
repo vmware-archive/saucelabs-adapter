@@ -9,16 +9,13 @@ if defined?(Spec::Runner)
   end
   Spec::Runner.configure do |config|
     config.before :all do
-      @selenium_config = SaucelabsAdapter::SeleniumConfig.new(ENV['SELENIUM_ENV'])
-      if @selenium_config.start_tunnel? and config.saucelabs_tunnel.nil?
-        config.saucelabs_tunnel = SaucelabsAdapter::Tunnel.factory(@selenium_config)
+      selenium_config = SaucelabsAdapter::SeleniumConfig.new(ENV['SELENIUM_ENV'])
+      if selenium_config.start_tunnel? and config.saucelabs_tunnel.nil?
+        config.saucelabs_tunnel = SaucelabsAdapter::Tunnel.factory(selenium_config)
         config.saucelabs_tunnel.start_tunnel
       end
-    end
-
-    config.before do
       webrat_config = Webrat.configuration
-      @selenium_config.configure_webrat(webrat_config)
+      selenium_config.configure_webrat(webrat_config)
     end
 
     at_exit do
