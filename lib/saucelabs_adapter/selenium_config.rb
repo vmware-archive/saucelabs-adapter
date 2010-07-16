@@ -6,7 +6,7 @@ module SaucelabsAdapter
     attr_reader :configuration
 
     def initialize(configuration_name = nil, selenium_yml_path = nil)
-      selenium_yml_path = selenium_yml_path || File.join(RAILS_ROOT, 'config', 'selenium.yml')
+      selenium_yml_path = selenium_yml_path || File.join(ENV['RAILS_ROOT'] || RAILS_ROOT, 'config', 'selenium.yml')
       SeleniumConfig.parse_yaml(selenium_yml_path)
       build_configuration(configuration_name)
     end
