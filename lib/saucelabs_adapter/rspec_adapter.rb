@@ -9,7 +9,7 @@ if defined?(Spec::Runner)
   end
 
   selenium_config = SaucelabsAdapter::SeleniumConfig.new(ENV['SELENIUM_ENV'])
-  if selenium_config.test_framework == :webrat
+  if selenium_config.test_framework.to_sym == :webrat
     Spec::Runner.configure do |config|
       config.before :all do
         if selenium_config.start_tunnel? and config.saucelabs_tunnel.nil?
