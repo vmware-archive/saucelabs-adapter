@@ -44,6 +44,12 @@ describe "SeleniumConfig" do
         @selenium_config.selenium_browser_key.should == "*chrome /Applications/Firefox.app/Contents/MacOS/firefox-bin"
       end
     end
+    
+    describe "#test_framework" do
+      it "should parse symbols" do
+        @selenium_config.test_framework.should == :webrat
+      end
+    end
 
     describe "#configure_polonium" do
       before do

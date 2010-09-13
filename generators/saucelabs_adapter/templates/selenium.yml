@@ -27,7 +27,7 @@ local_jsunit:
 # "Linux"               "firefox"           "3."
 saucelabs: &saucelabs
   <<: *common
-  test_framework: webrat
+  test_framework: :webrat
   # URL of Selenium RC server:
   selenium_server_address: "saucelabs.com"
   selenium_server_port: "4444"

@@ -155,7 +155,7 @@ module SaucelabsAdapter
                 # We have been given a port range. Find an unused one.
                 port = find_unused_port(application_address, ($1.to_i)..($2.to_i))
                 @configuration['application_port'] = port
-                @configuration['tunnel_to_localhost_port'] = port if test_framework == :webrat
+                @configuration['tunnel_to_localhost_port'] = port if test_framework.to_sym == :webrat
                 # Pass this calculated value on to any other instances of SeleniumConfig created
                 ENV['SAUCELABS_ADAPTER_APPLICATION_PORT'] = port.to_s
               end
