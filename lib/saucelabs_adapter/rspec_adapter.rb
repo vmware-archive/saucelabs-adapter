@@ -25,7 +25,7 @@ if defined?(Spec::Runner)
     config.before :each do |suite|
       ENV['SAUCELABS_JOB_NAME'] ||= "#{suite.class.description} #{suite.description}"
 
-      if selenium_config.test_framework.to_sym == :webrat
+      if defined?(Webrat) && selenium_config.test_framework.to_sym == :webrat
         webrat_config = Webrat.configuration
         selenium_config.configure_webrat(webrat_config)
       else
