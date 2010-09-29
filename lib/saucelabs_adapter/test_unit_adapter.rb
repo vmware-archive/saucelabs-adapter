@@ -11,10 +11,22 @@ if defined?(ActiveSupport::TestCase) && ActiveSupport::TestCase.respond_to?(:set
         if defined?(Polonium)
           polonium_config = Polonium::Configuration.instance
           selenium_config.configure_polonium(polonium_config)
-        elsif defined?(Webrat)
+        elsif defined?(Webrat) && selenium_config.test_framework.to_sym == :webrat
           webrat_config = Webrat.configuration
           selenium_config.configure_webrat(webrat_config)
+        else
+          puts "[saucelabs-adapter] Starting browser session"
+          @browser = selenium_config.create_driver
+          @browser.start_new_browser_session
         end
+      end
+
+      def teardown
+        if defined?(@browser)
+          puts "[saucelabs-adapter] Ending browser session"
+          @browser.close_current_browser_session
+        end
+        super
       end
     end
   end
@@ -35,32 +47,16 @@ if defined?(Test::Unit::UI::Console::TestRunner)
         @mediator.add_listener(Test::Unit::UI::TestRunnerMediator::STARTED, &method(:setup_tunnel))
         @mediator.add_listener(Test::Unit::UI::TestRunnerMediator::FINISHED, &method(:teardown_tunnel))
       end
-      if @selenium_config.kill_mongrel_after_suite?
+
+      if selenium_config.start_server.to_sym == :true && selenium_config.test_framework.to_sym != :webrat
+        @mediator.add_listener(Test::Unit::UI::TestRunnerMediator::STARTED, &method(:start_mongrel))
+      end
+
+      if @selenium_config.kill_mongrel_after_suite? || selenium_config.start_server.to_sym == :true
         @mediator.add_listener(Test::Unit::UI::TestRunnerMediator::FINISHED, &method(:kill_mongrel_if_needed))
       end
     end
 
     alias_method_chain :attach_to_mediator, :sauce_tunnel unless private_method_defined?(:attach_to_mediator_without_sauce_tunnel)
-
-    def setup_tunnel(suite_name)
-      @tunnel = SaucelabsAdapter::Tunnel.factory(@selenium_config)
-      @tunnel.start_tunnel
-    end
-
-    def teardown_tunnel(suite_name)
-      @tunnel.shutdown
-    end
-
-    def kill_mongrel_if_needed(suite_name)
-      mongrel_pid_file = File.join(RAILS_ROOT, "tmp", "pids", "mongrel_selenium.pid")
-      if File.exists?(mongrel_pid_file)
-        pid = File.read(mongrel_pid_file).to_i
-        say "Killing mongrel at #{pid}"
-        Process.kill("KILL", pid)
-      end
-      if File.exists?(mongrel_pid_file)
-        FileUtils.rm(mongrel_pid_file)
-      end
-    end
   end
 end
