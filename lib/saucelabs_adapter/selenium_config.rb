@@ -15,7 +15,7 @@ module SaucelabsAdapter
       @configuration[attribute.to_s] = value
     end
 
-    [ :test_framework,
+    [ :test_framework, :start_server,
       :selenium_server_address, :selenium_server_port,
       :application_address, :application_port,
       :saucelabs_username, :saucelabs_access_key,
@@ -86,8 +86,8 @@ module SaucelabsAdapter
 
     def create_driver(selenium_args = {})
       args = selenium_client_driver_args.merge(selenium_args)
-      say "Connecting to Selenium RC server at #{args[:host]}:#{args[:port]} (testing app at #{args[:url]})"
-      say "args = #{display_safely(args)}"
+      say "Connecting to Selenium RC server at #{args[:host]}:#{args[:port]} (testing app at #{args[:url]})" if ENV['SAUCELABS_ADAPTER_DEBUG']
+      say "args = #{display_safely(args)}" if ENV['SAUCELABS_ADAPTER_DEBUG']
       driver = ::Selenium::Client::Driver.new(args)
       debug "done"
       driver
@@ -168,7 +168,7 @@ module SaucelabsAdapter
         end
       else
         errors << require_attributes([:selenium_browser_key, :application_address ],
-                                      :when => "unless server is saucelab.com")
+                                      :when => "unless server is saucelabs.com")
       end
 
       errors.flatten!.compact!

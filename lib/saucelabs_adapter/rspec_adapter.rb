@@ -1,4 +1,5 @@
 if defined?(Spec::Runner)
+  include SaucelabsAdapter::Utilities
 
   module Spec
     module Runner
@@ -9,20 +10,41 @@ if defined?(Spec::Runner)
   end
 
   selenium_config = SaucelabsAdapter::SeleniumConfig.new(ENV['SELENIUM_ENV'])
-  if selenium_config.test_framework.to_sym == :webrat
-    Spec::Runner.configure do |config|
-      config.before :all do
-        if selenium_config.start_tunnel? and config.saucelabs_tunnel.nil?
-          config.saucelabs_tunnel = SaucelabsAdapter::Tunnel.factory(selenium_config)
-          config.saucelabs_tunnel.start_tunnel
-        end
-        webrat_config = Webrat.configuration
-        selenium_config.configure_webrat(webrat_config)
+  Spec::Runner.configure do |config|
+    config.before :suite do
+      if selenium_config.start_server.to_sym == :true && selenium_config.test_framework.to_sym != :webrat
+        start_mongrel(:port => selenium_config.application_port)
       end
 
-      at_exit do
-        config.saucelabs_tunnel.shutdown if config.saucelabs_tunnel
+      if selenium_config.start_tunnel? and config.saucelabs_tunnel.nil?
+        config.saucelabs_tunnel = SaucelabsAdapter::Tunnel.factory(selenium_config)
+        config.saucelabs_tunnel.start_tunnel
       end
+    end
+
+    config.before :each do |suite|
+      ENV['SAUCELABS_JOB_NAME'] ||= "#{suite.class.description} #{suite.description}"
+
+      if selenium_config.test_framework.to_sym == :webrat
+        webrat_config = Webrat.configuration
+        selenium_config.configure_webrat(webrat_config)
+      else
+        puts "[saucelabs-adapter] Starting browser session" if ENV['SAUCELABS_ADAPTER_DEBUG']
+        @browser = selenium_config.create_driver
+        @browser.start_new_browser_session
+      end
+    end
+
+    config.after :each do
+      if selenium_config.test_framework.to_sym != :webrat
+        puts "[saucelabs-adapter] Ending browser session" if ENV['SAUCELABS_ADAPTER_DEBUG']
+        @browser.close_current_browser_session
+      end
+    end
+
+    at_exit do
+      config.saucelabs_tunnel.shutdown if config.saucelabs_tunnel
+      kill_mongrel_if_needed
     end
   end
 end
