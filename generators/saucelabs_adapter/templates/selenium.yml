@@ -40,13 +40,13 @@ saucelabs: &saucelabs
   saucelabs_max_duration_seconds: 1800
   # Selenium RC browser connects to and tests the app at this URL:
   application_address: "testhost.com" # this will be ovewritten if tunnel_method == :saucetunnel
-  application_port: 80
+  application_port: 4000
   # App host can actually be a tunnel that tunnels from <application_address>:<application_port> to localhost:<tunnel_to_localhost_port>
   # There are 3 kinds of tunnels:
   #
-  # tunnel_method: :saucetunnel
-  # tunnel_to_localhost_port: 4000 # Warning: application_port and tunnel_to_localhost_port must be identical if you are using Webrat
-  # tunnel_startup_timeout: 240
+  tunnel_method: :saucetunnel
+  tunnel_to_localhost_port: 4000 # Warning: application_port and tunnel_to_localhost_port must be identical if you are using Webrat
+  tunnel_startup_timeout: 240
   #
   # tunnel_method: :sshtunnel # WARNING: if other projects use the same port on the same machine at the same time, you can get intermittent errors.
   # application_address: proxy.mycompany.com
