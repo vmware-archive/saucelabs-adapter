@@ -43,7 +43,7 @@ saucelabs: &saucelabs
   application_port: 4000
 
   # This only applies if the test_framework is not :webrat. Webrat starts its own mongrel.
-  start_server: :false
+  start_server: :true
 
   # App host can actually be a tunnel that tunnels from <application_address>:<application_port> to localhost:<tunnel_to_localhost_port>
   # There are 3 kinds of tunnels:

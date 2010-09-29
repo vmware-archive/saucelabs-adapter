@@ -48,13 +48,11 @@ if defined?(Test::Unit::UI::Console::TestRunner)
         @mediator.add_listener(Test::Unit::UI::TestRunnerMediator::FINISHED, &method(:teardown_tunnel))
       end
 
-      if selenium_config.start_server.to_sym == :true && selenium_config.test_framework.to_sym != :webrat
+      if selenium_config.start_server.to_sym == :true
         @mediator.add_listener(Test::Unit::UI::TestRunnerMediator::STARTED, &method(:start_mongrel))
       end
 
-      if @selenium_config.kill_mongrel_after_suite? || selenium_config.start_server.to_sym == :true
-        @mediator.add_listener(Test::Unit::UI::TestRunnerMediator::FINISHED, &method(:kill_mongrel_if_needed))
-      end
+      @mediator.add_listener(Test::Unit::UI::TestRunnerMediator::FINISHED, &method(:kill_mongrel_if_needed))
     end
 
     alias_method_chain :attach_to_mediator, :sauce_tunnel unless private_method_defined?(:attach_to_mediator_without_sauce_tunnel)
