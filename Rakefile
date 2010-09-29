@@ -25,37 +25,13 @@ begin
     gem.homepage = "http://github.com/pivotal/saucelabs-adapter"
     gem.authors = ["Kelly Felkins, Chad Woolley, Sam Pierson, Nate Clark"]
     gem.files = [
-     "LICENSE",
-     "README.rdoc",
-     "Rakefile",
-     "VERSION",
-     "lib/saucelabs_adapter.rb",
-     "lib/saucelabs-adapter.rb",
-     "lib/saucelabs_adapter/utilities.rb",
-     "lib/saucelabs_adapter/run_utils.rb",
-     "lib/saucelabs_adapter/tunnel.rb",
-     "lib/saucelabs_adapter/tunnels/sauce_tunnel.rb",
-     "lib/saucelabs_adapter/tunnels/ssh_tunnel.rb",
-     "lib/saucelabs_adapter/tunnels/other_tunnel.rb",
-     "lib/saucelabs_adapter/selenium_config.rb",
-     "lib/saucelabs_adapter/test_unit_adapter.rb",
-     "lib/saucelabs_adapter/rspec_adapter.rb",
-     "lib/saucelabs_adapter/jsunit_selenium_support.rb",
-     "lib/saucerest-ruby/saucerest.rb",
-     "lib/saucerest-ruby/gateway.rb",
-     "lib/saucerest-python/tunnel.py",
-     "lib/saucerest-python/daemon.py",
-     "lib/saucerest-python/saucerest.py",
-     "lib/saucerest-python/sshtunnel.py",
-     "lib/tasks/jsunit.rake",
-     "generators/saucelabs_adapter/saucelabs_adapter_generator.rb",
-     "generators/saucelabs_adapter/templates/sample_webrat_test.rb",
-     "generators/saucelabs_adapter/templates/selenium.yml",
-     "generators/saucelabs_adapter/templates/selenium_suite.rb",
-     "generators/saucelabs_adapter/templates/saucelabs_adapter.rake",
-     "generators/saucelabs_adapter/templates/jsunit.rake",
-     "generators/saucelabs_adapter/templates/jsunit_suite_example.rb"
-  ]
+      "LICENSE",
+      "README.rdoc",
+      "Rakefile",
+      "VERSION",
+      Dir['lib/**/*.*'],
+      Dir['generators/**/*.*'],
+    ].flatten
     gem.add_dependency 'rest-client', '>= 1.5.0'
     gem.add_dependency 'net-ssh', '>= 2.0.12'
     gem.add_dependency 'net-ssh-gateway', '>= 1.0.1'
