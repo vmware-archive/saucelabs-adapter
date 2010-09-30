@@ -2,6 +2,9 @@ common: &common
   # Try to kill mongrel after suite if tmp/pids/mongrel_selenium.pid exists
   # kill_mongrel_after_suite: true
 
+  # This only applies if the test_framework is not :webrat. Webrat starts its own mongrel.
+  start_server: :true
+
 local: &local
   <<: *common
   selenium_server_address: "127.0.0.1"
@@ -41,9 +44,6 @@ saucelabs: &saucelabs
   # Selenium RC browser connects to and tests the app at this URL:
   application_address: "testhost.com" # this will be ovewritten if tunnel_method == :saucetunnel
   application_port: 4000
-
-  # This only applies if the test_framework is not :webrat. Webrat starts its own mongrel.
-  start_server: :true
 
   # App host can actually be a tunnel that tunnels from <application_address>:<application_port> to localhost:<tunnel_to_localhost_port>
   # There are 3 kinds of tunnels:
