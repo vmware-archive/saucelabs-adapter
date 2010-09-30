@@ -21,9 +21,9 @@ if defined?(Spec::Runner)
     end
 
     config.before :each do |suite|
-      ENV['SAUCELABS_JOB_NAME'] ||= "#{suite.class.description} #{suite.description}"
+      ENV['SAUCELABS_JOB_NAME'] = "#{suite.class.description} #{suite.description}"
 
-      if defined?(Webrat) && selenium_config.test_framework.to_sym == :webrat
+      if defined?(Webrat)
         webrat_config = Webrat.configuration
         selenium_config.configure_webrat(webrat_config)
       else
@@ -34,7 +34,7 @@ if defined?(Spec::Runner)
     end
 
     config.after :each do
-      if selenium_config.test_framework.to_sym != :webrat
+      if defined?(@browser)
         puts "[saucelabs-adapter] Ending browser session" if ENV['SAUCELABS_ADAPTER_DEBUG']
         @browser.close_current_browser_session
       end
@@ -42,7 +42,7 @@ if defined?(Spec::Runner)
 
     at_exit do
       config.saucelabs_tunnel.shutdown if config.saucelabs_tunnel
-      kill_mongrel_if_needed
+      kill_mongrel_if_needed if selenium_config.kill_mongrel_after_suite?
     end
   end
 end

@@ -1,8 +1,9 @@
 require File.dirname(__FILE__) + "/../test_helper"
 require "saucelabs_adapter"
+require "saucelabs_adapter/jsunit_selenium_support"
 
 class JsunitTest < ActiveSupport::TestCase
-  include ::JsunitSeleniumSupport
+  include SaucelabsAdapter::JsunitSeleniumSupport
 
   def setup
     setup_jsunit_selenium # :timeout_in_seconds => 60, :app_server_logfile_path => "#{RAILS_ROOT}/log/jsunit_jetty_app_server.log"

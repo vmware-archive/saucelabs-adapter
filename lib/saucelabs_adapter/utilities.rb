@@ -38,7 +38,7 @@ module SaucelabsAdapter
     # parameters required when invoked by test_unit
     def start_mongrel(suite_name = {})
       pid_file = File.join(RAILS_ROOT, "tmp", "pids", "mongrel_selenium.pid")
-      port = suite_name.has_key?(:port) ? suite_name[:port] : @selenium_config.application_port
+      port = suite_name[:port] rescue @selenium_config.application_port
       say "Starting mongrel at #{pid_file}, port #{port}"
       system "mongrel_rails start -d --chdir='#{RAILS_ROOT}' --port=#{port} --environment=test --pid #{pid_file} %"
     end

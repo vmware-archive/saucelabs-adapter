@@ -11,7 +11,7 @@ if defined?(ActiveSupport::TestCase) && ActiveSupport::TestCase.respond_to?(:set
         if defined?(Polonium)
           polonium_config = Polonium::Configuration.instance
           selenium_config.configure_polonium(polonium_config)
-        elsif defined?(Webrat) && selenium_config.test_framework.to_sym == :webrat
+        elsif defined?(Webrat)
           webrat_config = Webrat.configuration
           selenium_config.configure_webrat(webrat_config)
         else
@@ -48,11 +48,13 @@ if defined?(Test::Unit::UI::Console::TestRunner)
         @mediator.add_listener(Test::Unit::UI::TestRunnerMediator::FINISHED, &method(:teardown_tunnel))
       end
 
-      if selenium_config.start_server.to_sym == :true
+      if @selenium_config.start_server && @selenium_config.start_server.to_sym == :true
         @mediator.add_listener(Test::Unit::UI::TestRunnerMediator::STARTED, &method(:start_mongrel))
       end
 
-      @mediator.add_listener(Test::Unit::UI::TestRunnerMediator::FINISHED, &method(:kill_mongrel_if_needed))
+      if @selenium_config.kill_mongrel_after_suite?
+        @mediator.add_listener(Test::Unit::UI::TestRunnerMediator::FINISHED, &method(:kill_mongrel_if_needed))
+      end
     end
 
     alias_method_chain :attach_to_mediator, :sauce_tunnel unless private_method_defined?(:attach_to_mediator_without_sauce_tunnel)
