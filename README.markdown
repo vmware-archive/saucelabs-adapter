@@ -78,6 +78,50 @@ Getting Started - JsUnit test suite
 
         rake jsunit:selenium_rc:sauce
 
+RSpec + Rails
+-------------
+
+Testing with RSpec + Rails? No problem. Add the following to your spec_helper.rb
+
+    ENV['SELENIUM_ENV'] ||= 'saucelabs'
+    require 'selenium/client'
+    require 'saucelabs_adapter'
+    require 'saucelabs_adapter/rspec_adapter'
+
+Note the environment variable must be set before the requiring of saucelabs_adapter.
+This can be set to `'local'` to use a local selenium server.
+
+Example Test
+------------
+
+*spec/views/index_spec.rb*
+
+    require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+
+    describe 'Google Search' do
+      it 'can find Google' do
+        @browser.open '/'
+        @browser.title.should eql('Google')
+      end
+    end
+
+Tests are run as normal through `rake spec`. A tunnel is launched at the beginning of
+each test, if those settings are not commented out.
+
+Parallel Testing
+----------------
+
+Once you have `rake spec` set up to run your selenium tests by following instructions
+above, you can parallelize them installing the `parallel_tests` plugin from
+[http://github.com/grosser/parallel_tests][parallel]
+
+From there, `rake parallel:spec[4]` runs your tests. One known issue is if
+tunnels are being used, one tunnel is spawned up for each process, which may
+be more lengthy.
+
+  [parallel]: http://github.com/grosser/parallel_tests
+
+
 What You Should See
 -------------------
 
