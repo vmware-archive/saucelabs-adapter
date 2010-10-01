@@ -42,7 +42,7 @@ if defined?(Spec::Runner)
 
     at_exit do
       config.saucelabs_tunnel.shutdown if config.saucelabs_tunnel
-      kill_mongrel_if_needed if selenium_config.kill_mongrel_after_suite?
+      kill_mongrel_if_needed if selenium_config.start_server && selenium_config.start_server.to_sym == :true
     end
   end
 end

@@ -50,9 +50,6 @@ if defined?(Test::Unit::UI::Console::TestRunner)
 
       if @selenium_config.start_server && @selenium_config.start_server.to_sym == :true
         @mediator.add_listener(Test::Unit::UI::TestRunnerMediator::STARTED, &method(:start_mongrel))
-      end
-
-      if @selenium_config.kill_mongrel_after_suite?
         @mediator.add_listener(Test::Unit::UI::TestRunnerMediator::FINISHED, &method(:kill_mongrel_if_needed))
       end
     end
