@@ -2,7 +2,7 @@ module SaucelabsAdapter
   module Utilities
 
     def diagnostics_prefix
-      @diagnostics_prefix ||= '[saucelabs-adapter]'
+      @diagnostics_prefix ||= '[saucelabs_adapter]'
     end
 
     def say(what)
@@ -40,7 +40,9 @@ module SaucelabsAdapter
       pid_file = File.join(RAILS_ROOT, "tmp", "pids", "mongrel_selenium.pid")
       port = suite_name[:port] rescue @selenium_config.application_port
       say "Starting mongrel at #{pid_file}, port #{port}"
-      system "mongrel_rails start -d --chdir='#{RAILS_ROOT}' --port=#{port} --environment=test --pid #{pid_file} %"
+#      system "mongrel_rails start -d --chdir='#{RAILS_ROOT}' --port=#{port} --environment=test --pid #{pid_file} %"
+      p `pwd`
+      system "rails s -d --port=#{port} --environment=test --pid #{pid_file} %"
     end
 
     def kill_mongrel_if_needed(suite_name = {})

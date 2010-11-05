@@ -61,9 +61,8 @@ namespace :selenium do
     desc "Run Selenium tests at saucelabs.com (using configuration 'saucelabs' in config/selenium.yml)"
     task :sauce => [:sauce_env, :suite]
 
-    task :suite do
-      require 'saucelabs-adapter'
-      Rake::Task['spec:integration'].invoke
+    RSpec::Core::RakeTask.new(:suite) do |t|
+      t.pattern = 'spec/selenium/**/*_spec.rb'
     end
   end
 end

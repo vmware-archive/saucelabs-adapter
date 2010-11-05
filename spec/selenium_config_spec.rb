@@ -1,5 +1,5 @@
 require File.join(File.dirname(__FILE__), 'spec_helper')
-# Don't pull in the entire saucelabs-adapter otherwise it will complain about: undefined method `setup' for ActiveSupport::TestCase:Class
+# Don't pull in the entire saucelabs_adapter otherwise it will complain about: undefined method `setup' for ActiveSupport::TestCase:Class
 # Apparently this is added from outside
 require 'saucelabs_adapter/utilities'
 require 'saucelabs_adapter/selenium_config'

@@ -6,7 +6,7 @@ module SaucelabsAdapter
     attr_reader :configuration
 
     def initialize(configuration_name = nil, selenium_yml_path = nil)
-      selenium_yml_path = selenium_yml_path || File.join(ENV['RAILS_ROOT'] || RAILS_ROOT, 'config', 'selenium.yml')
+      selenium_yml_path = selenium_yml_path || File.join(ENV['RAILS_ROOT'], 'config', 'selenium.yml')
       SeleniumConfig.parse_yaml(selenium_yml_path)
       build_configuration(configuration_name)
     end
@@ -103,7 +103,7 @@ module SaucelabsAdapter
     end
 
     def self.parse_yaml(selenium_yml_path)
-      raise "[saucelabs-adapter] could not open #{selenium_yml_path}" unless File.exist?(selenium_yml_path)
+      raise "[saucelabs_adapter] could not open #{selenium_yml_path}" unless File.exist?(selenium_yml_path)
       file_contents = File.open(selenium_yml_path).read
       erb_parsed_file_contents = ERB.new(%{#{file_contents}}).result
       configs = YAML.load(erb_parsed_file_contents)
@@ -122,8 +122,8 @@ module SaucelabsAdapter
 
     def build_configuration(configuration_name)
       @configuration = @@selenium_configs[configuration_name]
-      raise "[saucelabs-adapter] stanza '#{configuration_name}' not found in #{@selenium_yml}" unless @configuration
-      # If the Saucelabs-Adapter picked a port out of a range during this session, use it.
+      raise "[saucelabs_adapter] stanza '#{configuration_name}' not found in #{@selenium_yml}" unless @configuration
+      # If the saucelabs_adapter picked a port out of a range during this session, use it.
       if ENV['SAUCELABS_ADAPTER_APPLICATION_PORT']
         @configuration['application_port'] = ENV['SAUCELABS_ADAPTER_APPLICATION_PORT'].to_i
         debug("Using application port #{application_port} from environment variable SAUCELABS_ADAPTER_APPLICATION_PORT", 2)
@@ -173,7 +173,7 @@ module SaucelabsAdapter
 
       errors.flatten!.compact!
       if !errors.empty?
-        raise "[saucelabs-adapter] Aborting; stanza #{configuration_name} has the following errors:\n\t" + errors.join("\n\t")
+        raise "[saucelabs_adapter] Aborting; stanza #{configuration_name} has the following errors:\n\t" + errors.join("\n\t")
       end
     end
 

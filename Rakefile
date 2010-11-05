@@ -9,7 +9,7 @@ require 'spec/rake/spectask'
 desc 'Default: run unit tests.'
 task :default => :spec
 
-desc 'Test the saucelabs-adapter plugin.'
+desc 'Test the saucelabs_adapter plugin.'
 Spec::Rake::SpecTask.new(:spec) do |t|
   t.libs << 'lib'
   t.verbose = true
@@ -18,11 +18,11 @@ end
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
-    gem.name = "saucelabs-adapter"
+    gem.name = "saucelabs_adapter"
     gem.summary = %Q{Adapter for running Selenium tests using SauceLabs.com}
     gem.description = %Q{This gem augments Test::Unit and Polonium/Webrat to run Selenium tests in the cloud. }
     gem.email = "pair+kelly+sam@pivotallabs.com"
-    gem.homepage = "http://github.com/pivotal/saucelabs-adapter"
+    gem.homepage = "http://github.com/pivotal/saucelabs_adapter"
     gem.authors = ["Kelly Felkins, Chad Woolley, Sam Pierson, Nate Clark"]
     gem.files = [
       "LICENSE",
@@ -37,6 +37,7 @@ begin
     gem.add_dependency 'net-ssh-gateway', '>= 1.0.1'
     gem.add_dependency 'selenium-client', '>= 1.2.17'
     gem.add_dependency 'lsof', '>= 0.3.0'
+    gem.add_dependency 'json', '>= 1.4.3'
     # gem.add_development_dependency "thoughtbot-shoulda", ">= 0"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
@@ -74,7 +75,7 @@ Rake::RDocTask.new do |rdoc|
   version = File.exist?('VERSION') ? File.read('VERSION') : ""
 
   rdoc.rdoc_dir = 'rdoc'
-  rdoc.title = "saucelabs-adapter #{version}"
+  rdoc.title = "saucelabs_adapter #{version}"
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end

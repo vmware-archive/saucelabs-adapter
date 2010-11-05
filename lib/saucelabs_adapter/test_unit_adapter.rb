@@ -1,12 +1,12 @@
 if defined?(ActiveSupport::TestCase) && ActiveSupport::TestCase.respond_to?(:setup)
-  puts "[saucelabs-adapter] Inserting ActiveSupport::TestCase before_setup :configure_selenium hook" if ENV['SAUCELABS_ADAPTER_DEBUG']
+  puts "[saucelabs_adapter] Inserting ActiveSupport::TestCase before_setup :configure_selenium hook" if ENV['SAUCELABS_ADAPTER_DEBUG']
 
   module ::ActiveSupport
     class TestCase
       setup :configure_selenium # 'before_setup' callback from ActiveSupport::TestCase
 
       def configure_selenium
-        puts "[saucelabs-adapter] configuring selenium..." if ENV['SAUCELABS_ADAPTER_DEBUG'] && ENV['SAUCELABS_ADAPTER_DEBUG'].to_i >= 2
+        puts "[saucelabs_adapter] configuring selenium..." if ENV['SAUCELABS_ADAPTER_DEBUG'] && ENV['SAUCELABS_ADAPTER_DEBUG'].to_i >= 2
         selenium_config = SaucelabsAdapter::SeleniumConfig.new(ENV['SELENIUM_ENV'])
         if defined?(Polonium)
           polonium_config = Polonium::Configuration.instance
@@ -15,7 +15,7 @@ if defined?(ActiveSupport::TestCase) && ActiveSupport::TestCase.respond_to?(:set
           webrat_config = Webrat.configuration
           selenium_config.configure_webrat(webrat_config)
         else
-          puts "[saucelabs-adapter] Starting browser session"
+          puts "[saucelabs_adapter] Starting browser session"
           @browser = selenium_config.create_driver
           @browser.start_new_browser_session
         end
@@ -23,7 +23,7 @@ if defined?(ActiveSupport::TestCase) && ActiveSupport::TestCase.respond_to?(:set
 
       def teardown
         if defined?(@browser)
-          puts "[saucelabs-adapter] Ending browser session"
+          puts "[saucelabs_adapter] Ending browser session"
           @browser.close_current_browser_session
         end
         super
@@ -33,7 +33,7 @@ if defined?(ActiveSupport::TestCase) && ActiveSupport::TestCase.respond_to?(:set
 end
 
 if defined?(Test::Unit::UI::Console::TestRunner)
-  puts "[saucelabs-adapter] Inserting Test::Unit::UI::Console::TestRunner attach_to_mediator tunnel start hook" if ENV['SAUCELABS_ADAPTER_DEBUG']
+  puts "[saucelabs_adapter] Inserting Test::Unit::UI::Console::TestRunner attach_to_mediator tunnel start hook" if ENV['SAUCELABS_ADAPTER_DEBUG']
 
   class Test::Unit::UI::Console::TestRunner
     include SaucelabsAdapter::Utilities
