@@ -26,14 +26,3 @@ stanza_saucelabs_firefox_linux_saucetunnel:
   tunnel_to_localhost_port: 4000
   tunnel_startup_timeout: 240
   tunnel_keyfile: "/path/with/erb/<%= ENV['USER'] %>"
-
-
-
-
-
-
-
-
-
-
-

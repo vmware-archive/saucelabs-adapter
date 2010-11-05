@@ -3,14 +3,14 @@ Saucelabs-Adapter
 
 Saucelabs-adapter provides the glue to connect Rails Selenium tests to saucelabs.com.
 
-Currently it supports tests written using Webrat, Polonium and JSUnit.
+Currently it supports tests written using RSpec with Webrat.
 
-Getting Started - Webrat or Polonium test suites
+Getting Started - Webrat test suites
 ------------------------------------------------
 
 1. Prerequisites:
 
-    You must be able to run selenium tests locally using test/selenium/selenium_suite.rb
+    You must be able have Rspec, Webrat, Mongrel gems in your project.
 
 2. Install the gem:
 
@@ -20,63 +20,21 @@ Getting Started - Webrat or Polonium test suites
 
         cd your_project
 
-        script/generate saucelabs_adapter
+        rails generate saucelabs_adapter
 
 4. Configure it.  In config/selenium.yml, replace YOUR-SAUCELABS-USERNAME and
    YOUR-SAUCELABS-ACCESS-KEY with your saucelabs.com account information.
 
 5. Run Tests
 
-    To run Selenium Test::Unit tests locally:
+    To run RSpec Selenium tests locally:
 
-        rake selenium:local
+        rake spec:selenium
 
-    To run Selenium Test::Unit tests using saucelabs.com:
+    To run RSpec Selenium tests using saucelabs.com:
 
-        rake selenium:sauce
+        rake spec:selenium:sauce
 
-Getting Started - JsUnit test suite
------------------------------------
-
-1. Prerequisites:
-
-    Install the latest JsUnit from http://github.com/pivotal/jsunit
-
-    JsUnit must be installed in RAILS_ROOT/public/jsunit as follows:
-
-        public/jsunit/jsunit_jar/jsunit.jar      -- the compiled jar
-        public/jsunit/jsunit/build.xml etc...    -- jsunit sources
-
-2. Install the saucelabs-adapter gem:
-
-        gem install saucelabs-adapter
-
-3. Run the saucelabs_adapter generator in your project:
-
-        cd your_project
-
-        script/generate saucelabs_adapter --jsunit
-
-4. Configure it.
-
-    In config/selenium.yml, replace YOUR-SAUCELABS-USERNAME and
-    YOUR-SAUCELABS-ACCESS-KEY with your saucelabs.com account information.
-
-    Rename RAILS_ROOT/test/jsunit/jsunit_suite_example.rb to RAILS_ROOT/test/jsunit/jsunit_suite.rb
-    and modify it if necessary:
-    test_page needs to be set to the path under /public where your JsUnit test page (suite.html or similar) lives,
-    with '/jsunit' prepended. e.g. if your JsUnit suite runs from RAILS_ROOT/public/javascripts/test-pages/suite.html
-    then test_page needs to be set to '/jsunit/javascripts/test-pages/suite.html'.
-
-5. Run Tests
-
-    To run JsUnit tests locally:
-
-        rake jsunit:selenium_rc:local
-
-    To run JsUnit tests using saucelabs.com:
-
-        rake jsunit:selenium_rc:sauce
 
 RSpec + Rails
 -------------
@@ -96,12 +54,12 @@ Example Test
 
 *spec/views/index_spec.rb*
 
-    require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+    require File.expand_path(File.dirname(__FILE__) + '/selenium_spec_helper')
 
     describe 'Google Search' do
       it 'can find Google' do
-        @browser.open '/'
-        @browser.title.should eql('Google')
+        visit 'http://www.google.com'
+        webrat_session.selenium.get_html_source.should contain 'Google'
       end
     end
 

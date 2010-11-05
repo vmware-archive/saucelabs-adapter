@@ -53,16 +53,19 @@ namespace :selenium do
       exit 1
     end
   end
+end
 
-  namespace :spec do
-    desc "Runs Selenium tests locally (selenium server must already be started)"
-    task :local => [:local_env, :suite]
+namespace :spec do
 
+  RSpec::Core::RakeTask.new(:suite) do |t|
+    t.pattern = 'spec/selenium/**/*_spec.rb'
+  end
+
+  desc "Runs Selenium tests locally (selenium server must already be started)"
+  task :selenium => [:'selenium:local_env', :'spec:suite']
+
+  namespace :selenium do
     desc "Run Selenium tests at saucelabs.com (using configuration 'saucelabs' in config/selenium.yml)"
-    task :sauce => [:sauce_env, :suite]
-
-    RSpec::Core::RakeTask.new(:suite) do |t|
-      t.pattern = 'spec/selenium/**/*_spec.rb'
-    end
+    task :sauce => [:'selenium:sauce_env', :'spec:suite']
   end
 end

@@ -12,10 +12,7 @@ class SaucelabsAdapterGenerator < Rails::Generators::Base
     After running this generator:
 
     1) Go edit config/selenium.yml and add your SauceLabs API credentials
-    2) Add this to your selenium_helper.rb:
-
-      require 'saucelabs_adapter'
-
+    
     HELPFUL_INSTRUCTIONS
     super
   end
