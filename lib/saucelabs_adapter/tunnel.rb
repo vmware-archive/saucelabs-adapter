@@ -2,6 +2,8 @@ module SaucelabsAdapter
 
   class Tunnel
 
+    attr_reader :se_config
+
     def self.factory(selenium_config)
       tunnels = {
         :saucetunnel => SauceTunnel,

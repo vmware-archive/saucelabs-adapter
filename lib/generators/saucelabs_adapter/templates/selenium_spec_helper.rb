@@ -1,5 +1,5 @@
 ENV['SELENIUM_ENV'] ||= 'saucelabs'
-ENV['SAUCELABS_ADAPTER_DEBUG'] = 'true'
+#ENV['SAUCELABS_ADAPTER_DEBUG'] = 'true'
 ENV["RAILS_ENV"] = "test"
 rails_root = File.dirname(__FILE__) + '/../..'
 ENV['RAILS_ROOT'] = rails_root

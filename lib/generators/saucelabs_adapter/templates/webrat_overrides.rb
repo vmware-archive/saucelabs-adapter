@@ -10,7 +10,6 @@ module Webrat
         end
 
         def start_command
-#          "cd /Users/pair/workspace/lava && rails server --port=#{Webrat.configuration.application_port} --environment=#{Webrat.configuration.application_environment} --pid #{pid_file} &"
           "cd #{::Rails.root} && rackup -p #{Webrat.configuration.application_port} --env #{Webrat.configuration.application_environment} --pid #{pid_file} &"
         end
 
