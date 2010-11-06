@@ -22,7 +22,6 @@ pkg
 .idea
 
 ## PROJECT::SPECIFIC
-saucelabs_adapter.gemspec
 
 .rvmrc
 .bundle
