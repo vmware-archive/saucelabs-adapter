@@ -23,7 +23,7 @@ module SaucelabsAdapter
       :saucelabs_max_duration_seconds,
       :tunnel_method, :tunnel_to_localhost_port, :tunnel_startup_timeout,
       :tunnel_username, :tunnel_password, :tunnel_keyfile,
-      :jsunit_polling_interval_seconds, :kill_mongrel_after_suite ].each do |attr|
+      :kill_mongrel_after_suite ].each do |attr|
       define_method(attr) do
         @configuration[attr.to_s]
       end

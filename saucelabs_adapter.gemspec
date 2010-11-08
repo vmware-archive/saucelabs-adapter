@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Kelly Felkins, Chad Woolley, Sam Pierson, Nate Clark"]
-  s.date = %q{2010-11-05}
+  s.date = %q{2010-11-08}
   s.description = %q{This gem augments RSpec and Webrat to run Selenium tests in the cloud. }
   s.email = %q{pair+kelly+sam@pivotallabs.com}
   s.extra_rdoc_files = [
@@ -28,32 +28,23 @@ Gem::Specification.new do |s|
      "lib/generators/saucelabs_adapter/templates/webrat_overrides.rb",
      "lib/saucelabs-adapter.rb",
      "lib/saucelabs_adapter.rb",
-     "lib/saucelabs_adapter/jsunit_selenium_support.rb",
      "lib/saucelabs_adapter/rspec_adapter.rb",
      "lib/saucelabs_adapter/run_utils.rb",
      "lib/saucelabs_adapter/selenium_config.rb",
-     "lib/saucelabs_adapter/test_unit_adapter.rb",
      "lib/saucelabs_adapter/tunnel.rb",
      "lib/saucelabs_adapter/tunnels/other_tunnel.rb",
      "lib/saucelabs_adapter/tunnels/sauce_tunnel.rb",
      "lib/saucelabs_adapter/tunnels/ssh_tunnel.rb",
-     "lib/saucelabs_adapter/utilities.rb",
-     "lib/saucerest-ruby/README.md",
-     "lib/saucerest-ruby/gateway.rb",
-     "lib/saucerest-ruby/listtunnels.rb",
-     "lib/saucerest-ruby/saucerest.rb",
-     "lib/saucerest-ruby/tunnel.rb"
+     "lib/saucelabs_adapter/utilities.rb"
   ]
-  s.homepage = %q{http://github.com/pivotal/saucelabs-adapter}
+  s.homepage = %q{http://github.com/pivotal/saucelabs_adapter}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.7}
   s.summary = %q{Adapter for running Selenium tests using SauceLabs.com}
   s.test_files = [
     "spec/selenium_config_spec.rb",
-     "spec/spec_helper.rb",
-     "test/helper.rb",
-     "test/test_saucelabs-adapter.rb"
+     "spec/spec_helper.rb"
   ]
 
   if s.respond_to? :specification_version then

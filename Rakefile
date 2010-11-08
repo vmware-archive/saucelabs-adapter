@@ -20,7 +20,7 @@ begin
   Jeweler::Tasks.new do |gem|
     gem.name = "saucelabs_adapter"
     gem.summary = %Q{Adapter for running Selenium tests using SauceLabs.com}
-    gem.description = %Q{This gem augments Test::Unit and Polonium/Webrat to run Selenium tests in the cloud. }
+    gem.description = %Q{This gem augments RSpec and Webrat to run Selenium tests in the cloud. }
     gem.email = "pair+kelly+sam@pivotallabs.com"
     gem.homepage = "http://github.com/pivotal/saucelabs_adapter"
     gem.authors = ["Kelly Felkins, Chad Woolley, Sam Pierson, Nate Clark"]

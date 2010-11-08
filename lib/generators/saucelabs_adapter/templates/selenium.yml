@@ -13,10 +13,6 @@ local: &local
   application_address: "127.0.0.1"
   application_port: "4000"
 
-local_jsunit:
-  <<: *local
-  application_port: "8080"
-
 # Possible Sauce Labs configurations as of 2009/11/19
 # From: http://saucelabs.com/products/docs/sauce-ondemand/browsers
 #
@@ -60,30 +56,3 @@ saucelabs: &saucelabs
   # tunnel_keyfile: "/Users/<%= ENV['USER'] %>/.ssh/id_rsa"  # or tunnel_password: "password"
   #
   # tunnel_method: :othertunnel        You're managing your tunnel independently
-
-saucelabs_jsunit: &saucelabs_jsunit
-  <<: *saucelabs
-  # We are using the Jetty server for Saucelabs JsUnit selenium testing.
-  localhost_app_server_port: "8080"
-
-saucelabs_jsunit_firefox:
-  <<: *saucelabs_jsunit
-
-saucelabs_jsunit_ie:
-  <<: *saucelabs_jsunit
-  saucelabs_browser_os: "Windows 2003"
-  saucelabs_browser: "iexplore"
-  saucelabs_browser_version: "7."
-  jsunit_polling_interval_seconds: 300
-
-saucelabs_jsunit_safari:
-  <<: *saucelabs_jsunit
-  saucelabs_browser_os: "Windows 2003"
-  saucelabs_browser: "safari"
-  saucelabs_browser_version: "4."
-
-saucelabs_jsunit_chrome:
-  <<: *saucelabs_jsunit
-  saucelabs_browser_os: "Windows 2003"
-  saucelabs_browser: "googlechrome"
-  saucelabs_browser_version: ""
