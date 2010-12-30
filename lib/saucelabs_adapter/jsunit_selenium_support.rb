@@ -15,7 +15,7 @@ module SaucelabsAdapter
       start_app_server(options)
       @selenium_driver = @selenium_config.create_driver(options)
       debug "calling @selenium_driver.start"
-      @selenium_driver.start
+      @selenium_driver.start_new_browser_session :trustAllSSLCertificates => false
       debug "@selenium_driver.start done"
     end
 
