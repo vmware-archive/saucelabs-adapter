@@ -114,9 +114,14 @@ module SaucelabsAdapter
 
     def display_safely(selenium_args)
       safe = selenium_args.dup
-      safe[:browser] = JSON.parse( safe[:browser])
-      safe[:browser]['access-key'] = safe[:browser]['access-key'][0..4] + '...'
-      safe[:browser] = safe[:browser].to_json
+      begin
+        safe[:browser] = JSON.parse( safe[:browser])
+        safe[:browser]['access-key'] = safe[:browser]['access-key'][0..4] + '...'
+        safe[:browser] = safe[:browser].to_json
+      rescue
+        # args are not always json, e.g. when running locally
+        # for now, just ignore any exceptions when trying to parse args with json
+      end
       safe.inspect
     end
 
