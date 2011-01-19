@@ -12,7 +12,7 @@ if defined?(Spec::Runner)
   selenium_config = SaucelabsAdapter::SeleniumConfig.new(ENV['SELENIUM_ENV'])
   Spec::Runner.configure do |config|
     config.before :suite do
-      start_mongrel(:port => selenium_config.application_port) if selenium_config.start_server.to_sym == :true
+      start_mongrel(:port => selenium_config.application_port) if selenium_config.start_server && selenium_config.start_server.to_sym == :true
 
       if selenium_config.start_tunnel? and config.saucelabs_tunnel.nil?
         config.saucelabs_tunnel = SaucelabsAdapter::Tunnel.factory(selenium_config)
