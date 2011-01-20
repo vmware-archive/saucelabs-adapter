@@ -17,7 +17,7 @@ if defined?(ActiveSupport::TestCase) && ActiveSupport::TestCase.respond_to?(:set
         else
           puts "[saucelabs-adapter] Starting browser session"
           @browser = selenium_config.create_driver
-          @browser.start_new_browser_session
+          @browser.start_new_browser_session :trustAllSSLCertificates => false
         end
       end
 

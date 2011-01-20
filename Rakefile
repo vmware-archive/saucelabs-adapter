@@ -37,6 +37,7 @@ begin
     gem.add_dependency 'net-ssh-gateway', '>= 1.0.1'
     gem.add_dependency 'selenium-client', '>= 1.2.17'
     gem.add_dependency 'lsof', '>= 0.3.0'
+    gem.add_dependency 'sauce', '>= 0.12.7'
     # gem.add_development_dependency "thoughtbot-shoulda", ">= 0"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end

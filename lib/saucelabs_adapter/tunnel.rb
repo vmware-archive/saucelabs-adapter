@@ -5,6 +5,7 @@ module SaucelabsAdapter
     def self.factory(selenium_config)
       tunnels = {
         :saucetunnel => SauceTunnel,
+        :sauceconnecttunnel => SauceConnectTunnel,
         :sshtunnel => SshTunnel,
         :othertunnel => OtherTunnel
       }

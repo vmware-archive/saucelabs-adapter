@@ -17,7 +17,7 @@ module SaucelabsAdapter
 
     [ :test_framework, :start_server,
       :selenium_server_address, :selenium_server_port,
-      :application_address, :application_port,
+      :application_address, :application_port, :domain,
       :saucelabs_username, :saucelabs_access_key,
       :saucelabs_browser_os, :saucelabs_browser, :saucelabs_browser_version,
       :saucelabs_max_duration_seconds,
@@ -149,6 +149,7 @@ module SaucelabsAdapter
           case tunnel_method.to_sym
             when nil, ""
             when :saucetunnel
+            when :sauceconnecttunnel
             when :othertunnel
               errors << require_attributes([:application_address], :when => "when tunnel_method is :othertunnel")
             when :sshtunnel

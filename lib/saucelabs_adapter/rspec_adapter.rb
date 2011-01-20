@@ -29,7 +29,7 @@ if defined?(Spec::Runner)
       else
         puts "[saucelabs-adapter] Starting browser session" if ENV['SAUCELABS_ADAPTER_DEBUG']
         @browser = selenium_config.create_driver
-        @browser.start_new_browser_session
+        @browser.start_new_browser_session :trustAllSSLCertificates => false
       end
     end
 

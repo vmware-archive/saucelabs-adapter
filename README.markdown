@@ -168,6 +168,11 @@ Resources
 NOTABLE CHANGES
 ===============
 
+0.9.0
+-----
+- Added support for :sauce_connect_tunnel tunnel method, which uses 'sauce connect'
+  from the 'sauce' gem.  This also introduces a dependency on the sauce gem.
+
 0.8.7
 -----
 - No longer exits when the tunnel status is 'deploying'
