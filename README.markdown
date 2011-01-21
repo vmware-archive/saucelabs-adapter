@@ -3,14 +3,10 @@ Saucelabs-Adapter
 
 Saucelabs-adapter provides the glue to connect Rails Selenium tests to saucelabs.com.
 
-Currently it supports tests written using Webrat, Polonium and JSUnit.
+Currently it supports tests written using Webrat (via Test::Unit or Rspec), and JSUnit.
 
-Getting Started - Webrat or Polonium test suites
+Getting Started - Webrat + Test::Unit test suites
 ------------------------------------------------
-
-1. Prerequisites:
-
-    You must be able to run selenium tests locally using test/selenium/selenium_suite.rb
 
 2. Install the gem:
 
@@ -18,12 +14,22 @@ Getting Started - Webrat or Polonium test suites
 
 3. Run the saucelabs_adapter generator in your project:
 
-        cd your_project
+        $ cd your_rails_project
+        $ script/generate saucelabs_adapter
 
-        script/generate saucelabs_adapter
+4. If you will run against saucelabs (not just a local selenium rc server), enter your credentials.
+   In config/selenium.yml, replace YOUR-SAUCELABS-USERNAME and YOUR-SAUCELABS-ACCESS-KEY with your saucelabs.com account information.
 
-4. Configure it.  In config/selenium.yml, replace YOUR-SAUCELABS-USERNAME and
-   YOUR-SAUCELABS-ACCESS-KEY with your saucelabs.com account information.
+5. Install the webrat gem (>= 0.7.3) and the mongrel gem (so it can start your Rails app)
+
+        $ gem install webrat
+        $ gem install mongrel
+
+6. To run against a local selenium server during development/test (not saucelabs), have an installed and running Selenium RC server
+   (e.g. selenium-rc gem which provides 'selenium-rc' executable)
+   
+        $ gem install selenium-rc
+        $ selenium-rc
 
 5. Run Tests
 
@@ -34,49 +40,6 @@ Getting Started - Webrat or Polonium test suites
     To run Selenium Test::Unit tests using saucelabs.com:
 
         rake selenium:sauce
-
-Getting Started - JsUnit test suite
------------------------------------
-
-1. Prerequisites:
-
-    Install the latest JsUnit from http://github.com/pivotal/jsunit
-
-    JsUnit must be installed in RAILS_ROOT/public/jsunit as follows:
-
-        public/jsunit/jsunit_jar/jsunit.jar      -- the compiled jar
-        public/jsunit/jsunit/build.xml etc...    -- jsunit sources
-
-2. Install the saucelabs-adapter gem:
-
-        gem install saucelabs-adapter
-
-3. Run the saucelabs_adapter generator in your project:
-
-        cd your_project
-
-        script/generate saucelabs_adapter --jsunit
-
-4. Configure it.
-
-    In config/selenium.yml, replace YOUR-SAUCELABS-USERNAME and
-    YOUR-SAUCELABS-ACCESS-KEY with your saucelabs.com account information.
-
-    Rename RAILS_ROOT/test/jsunit/jsunit_suite_example.rb to RAILS_ROOT/test/jsunit/jsunit_suite.rb
-    and modify it if necessary:
-    test_page needs to be set to the path under /public where your JsUnit test page (suite.html or similar) lives,
-    with '/jsunit' prepended. e.g. if your JsUnit suite runs from RAILS_ROOT/public/javascripts/test-pages/suite.html
-    then test_page needs to be set to '/jsunit/javascripts/test-pages/suite.html'.
-
-5. Run Tests
-
-    To run JsUnit tests locally:
-
-        rake jsunit:selenium_rc:local
-
-    To run JsUnit tests using saucelabs.com:
-
-        rake jsunit:selenium_rc:sauce
 
 RSpec + Rails
 -------------
@@ -122,6 +85,50 @@ be more lengthy.
   [parallel]: http://github.com/grosser/parallel_tests
 
 
+Getting Started - JsUnit test suite
+-----------------------------------
+
+1. Prerequisites:
+
+    Install the latest JsUnit from http://github.com/pivotal/jsunit
+
+    JsUnit must be installed in RAILS_ROOT/public/jsunit as follows:
+
+        public/jsunit/jsunit_jar/jsunit.jar      -- the compiled jar
+        public/jsunit/jsunit/build.xml etc...    -- jsunit sources
+
+2. Install the saucelabs-adapter gem:
+
+        gem install saucelabs-adapter
+
+3. Run the saucelabs_adapter generator in your project:
+
+        cd your_project
+
+        script/generate saucelabs_adapter --jsunit
+
+4. Configure it.
+
+    In config/selenium.yml, replace YOUR-SAUCELABS-USERNAME and
+    YOUR-SAUCELABS-ACCESS-KEY with your saucelabs.com account information.
+
+    Rename RAILS_ROOT/test/jsunit/jsunit_suite_example.rb to RAILS_ROOT/test/jsunit/jsunit_suite.rb
+    and modify it if necessary:
+    test_page needs to be set to the path under /public where your JsUnit test page (suite.html or similar) lives,
+    with '/jsunit' prepended. e.g. if your JsUnit suite runs from RAILS_ROOT/public/javascripts/test-pages/suite.html
+    then test_page needs to be set to '/jsunit/javascripts/test-pages/suite.html'.
+
+5. Run Tests
+
+    To run JsUnit tests locally:
+
+        rake jsunit:selenium_rc:local
+
+    To run JsUnit tests using saucelabs.com:
+
+        rake jsunit:selenium_rc:sauce
+
+
 What You Should See
 -------------------
 
@@ -136,14 +143,14 @@ When running tests, intermixed with your test output you should see the followin
 
 In Case of Problems
 -------------------
-Try setting environment variable SAUCELABS_ADAPTER_DEBUG to "true".  This enables more verbose output.
+Try setting environment variable SAUCELABS\_ADAPTER\_DEBUG to "true".  This enables more verbose output.
 
 
 Continuous Integration
 ----------------------
 Sauce Labs now lets you set the name of a test job.
 By default the SaucelabsAdapter will set this to the name of the machine it is currently running on,
-however you may override this by setting the environment variable SAUCELABS_JOB_NAME.
+however you may override this by setting the environment variable SAUCELABS\_JOB\_NAME.
 
 This can be useful if you run many tests from the same CI machine and would like to differentiate between
 them without actually viewing the video.
@@ -153,7 +160,7 @@ What it Does
 
 The saucelabs-adapter performs two functions when it detects you are running a test that will use saucelabs.com:
 
-1. It sets up a SauceTunnel before the test run starts and tears it down after the test ends.  This happens once for the entire test run.
+1. It sets up a Sauce Connect Tunnel before the test run starts and tears it down after the test ends.  This happens once for the entire test run.
 
 2. It configures the selenium client to connect to the correct address at saucelabs.com.  This happens at the start of each test.
 
@@ -162,7 +169,7 @@ Resources
 * [The gem](http://gemcutter.org/gems/saucelabs-adapter)
 * [Source code](http://github.com/pivotal/saucelabs-adapter)
 * [Tracker project](http://www.pivotaltracker.com/projects/59050)
-* [Canary CI build](http://ci.pivotallabs.com:3333/builds/SaucelabsCanary)
+* [Canary CI build](http://cibuilder.pivotallabs.com:3333/builds/SaucelabsCanary)
 * [Canary project source code](http://github.com/pivotal/saucelabs-canary)
 
 NOTABLE CHANGES

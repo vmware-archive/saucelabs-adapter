@@ -9,12 +9,8 @@ class SaucelabsAdapterGenerator < Rails::Generator::Base
 
     The saucelabs_adapter generator installs glue to connect your Selenium tests to saucelabs.com
 
-    After running this generator:
-
-    1) Go edit config/selenium.yml and add your SauceLabs API credentials
-    2) Add this to your selenium_helper.rb:
-
-      require 'saucelabs-adapter'
+    Read the README.markdown at http://github.com/pivotal/saucelabs-adapter for
+    detailed instructions on various usage scenarios.
 
     HELPFUL_INSTRUCTIONS
     super
