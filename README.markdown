@@ -175,6 +175,10 @@ Resources
 NOTABLE CHANGES
 ===============
 
+0.9.1
+-----
+- Fix error with port when running webrat against local server
+
 0.9.0
 -----
 - Added support for :sauce_connect_tunnel tunnel method, which uses 'sauce connect'

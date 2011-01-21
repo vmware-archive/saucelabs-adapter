@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{saucelabs-adapter}
-  s.version = "0.9.0"
+  s.version = "0.9.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Kelly Felkins, Chad Woolley, Sam Pierson, Nate Clark"]
-  s.date = %q{2011-01-20}
+  s.date = %q{2011-01-21}
   s.description = %q{This gem augments Test::Unit and Polonium/Webrat to run Selenium tests in the cloud. }
   s.email = %q{pair+kelly+sam@pivotallabs.com}
   s.extra_rdoc_files = [

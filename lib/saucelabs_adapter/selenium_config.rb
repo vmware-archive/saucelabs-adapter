@@ -69,7 +69,7 @@ module SaucelabsAdapter
         'selenium_server_port'    => :selenium_server_port,
         'selenium_browser_key'    => :selenium_browser_key,
         'application_address'     => :application_address,
-        'application_port_for_selenium' => :tunnel_to_localhost_port,
+        'application_port_for_selenium' => start_tunnel? ? :tunnel_to_localhost_port : :application_port,
         'application_port'        => :application_port
       }.each do |webrat_configuration_method, our_accessor|
         webrat_configuration_object.send("#{webrat_configuration_method}=", self.send(our_accessor).to_s)
