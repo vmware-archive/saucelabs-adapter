@@ -42,15 +42,17 @@ saucelabs: &saucelabs
   saucelabs_browser_version: "3."
   saucelabs_max_duration_seconds: 1800
   # Selenium RC browser connects to and tests the app at this URL:
-  application_address: "testhost.com" # this will be ovewritten if tunnel_method == :saucetunnel
+  # application_address: "localhost" # this will be overwritten if tunnel_method == :saucetunnel or :sauceconnecttunnel
   application_port: 4000
+  tunnel_to_localhost_port: 4000
 
   # App host can actually be a tunnel that tunnels from <application_address>:<application_port> to localhost:<tunnel_to_localhost_port>
-  # There are 3 kinds of tunnels:
+  # There are 4 kinds of tunnels:
   #
-  tunnel_method: :saucetunnel
-  tunnel_to_localhost_port: 4000 # Warning: application_port and tunnel_to_localhost_port must be identical if you are using Webrat
-  tunnel_startup_timeout: 240
+  tunnel_method: :sauceconnecttunnel # this is the new preferred 'sauce connect' tunnel method from the 'sauce' gem
+  #
+  # tunnel_method: :saucetunnel # NOTE: this is the 'old' deprecated sauce tunnel method
+  # tunnel_startup_timeout: 240
   #
   # tunnel_method: :sshtunnel # WARNING: if other projects use the same port on the same machine at the same time, you can get intermittent errors.
   # application_address: proxy.mycompany.com
@@ -64,7 +66,7 @@ saucelabs: &saucelabs
 saucelabs_jsunit: &saucelabs_jsunit
   <<: *saucelabs
   # We are using the Jetty server for Saucelabs JsUnit selenium testing.
-  localhost_app_server_port: "8080"
+  tunnel_to_localhost_port: "8080"
 
 saucelabs_jsunit_firefox:
   <<: *saucelabs_jsunit

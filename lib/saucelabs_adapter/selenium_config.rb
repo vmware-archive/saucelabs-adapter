@@ -17,7 +17,7 @@ module SaucelabsAdapter
 
     [ :test_framework, :start_server,
       :selenium_server_address, :selenium_server_port,
-      :application_address, :application_port, :domain,
+      :application_address, :application_port,
       :saucelabs_username, :saucelabs_access_key,
       :saucelabs_browser_os, :saucelabs_browser, :saucelabs_browser_version,
       :saucelabs_max_duration_seconds,
@@ -46,9 +46,10 @@ module SaucelabsAdapter
     end
 
     def application_address
-      if start_tunnel? && @configuration['tunnel_method'].to_sym == :saucetunnel
-        # We are using Sauce Labs and Sauce Tunnel.
-        # We need to use a masquerade hostname on the EC2 end of the tunnel that will be unique within the scope of
+      if start_tunnel? &&
+          [:sauceconnecttunnel, :saucetunnel].include?(@configuration['tunnel_method'].to_sym)
+        # We are using Sauce Labs and Sauce Connect Tunnel or Sauce Tunnel.
+        # We need to use a masquerade hostname on the EC2/Sauce end of the tunnel that will be unique within the scope of
         # this account (e.g. pivotallabs).  Therefore we mint a fairly unique hostname here.
         hostname = Socket.gethostname.split(".").first
         "#{hostname}-#{Process.pid}.com"
@@ -60,11 +61,15 @@ module SaucelabsAdapter
 
     # Takes a Webrat::Configuration object and configures it by calling methods on it
     def configure_webrat(webrat_configuration_object)
+      # NOTE: application_port_for_selenium requires version > 0.7.3 of webrat
+      # Prior versions only have application_address, and don't have a concept of
+      # starting a rails server at one port, and hitting it at selenium via another
       {
         'selenium_server_address' => :selenium_server_address,
         'selenium_server_port'    => :selenium_server_port,
         'selenium_browser_key'    => :selenium_browser_key,
         'application_address'     => :application_address,
+        'application_port_for_selenium' => :tunnel_to_localhost_port,
         'application_port'        => :application_port
       }.each do |webrat_configuration_method, our_accessor|
         webrat_configuration_object.send("#{webrat_configuration_method}=", self.send(our_accessor).to_s)
@@ -145,13 +150,15 @@ module SaucelabsAdapter
                                         :saucelabs_max_duration_seconds ],
                                       :when => "when selenium_server_address is saucelabs.com")
         if tunnel_method
-          errors << require_attributes([:tunnel_to_localhost_port ], :when => "if tunnel_method is set")
           case tunnel_method.to_sym
             when nil, ""
             when :saucetunnel
+              errors << require_attributes([:tunnel_to_localhost_port ], :when => "if tunnel_method is :saucetunnel")
             when :sauceconnecttunnel
+              errors << require_attributes([:tunnel_to_localhost_port ], :when => "if tunnel_method is :sauceconnecttunnel")
             when :othertunnel
               errors << require_attributes([:application_address], :when => "when tunnel_method is :othertunnel")
+              errors << require_attributes([:tunnel_to_localhost_port ], :when => "if tunnel_method is :othertunnel")
             when :sshtunnel
               errors << require_attributes([:application_address], :when => "when tunnel_method is :sshtunnel")
               errors << require_attributes([:tunnel_password, :tunnel_keyfile],
