@@ -175,6 +175,10 @@ Resources
 NOTABLE CHANGES
 ===============
 
+0.9.2
+-----
+- Revert incorrect deletion of require for jsunit\_selenium\_support.rb
+
 0.9.1
 -----
 - Fix error with port when running webrat against local server
